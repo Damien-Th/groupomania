@@ -1,0 +1,30 @@
+@use 'sass:math';
+
+// FLEX
+@mixin flex($direction, $wrap, $justify-content, $align-items) {
+    display: flex;
+    flex-flow: $direction $wrap;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+
+// Object Fit
+@mixin objectFit($object-fit, $object-position, $height, $width) {
+    object-fit: $object-fit;
+    object-position: $object-position;
+    height: $height;
+    width: $width;
+}
+
+// Function //
+@function color($color-name) {
+    @return var(--#{$color-name});
+}
+
+@function stripUnit($value) {
+    @return math.div($value, $value * 0 + 1);
+}
+
+@function rem($pxValue) {
+    @return #{math.div(stripUnit($pxValue), stripUnit($html-font-size))}rem;
+}

@@ -1,0 +1,60 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.profil-page {
+    height: 100vh;
+    @include flex(row, nowrap, center, center);
+
+    .img-container {
+        flex: 1;
+        height: 100%;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .log-container {
+        flex: 1;
+        height: 100%;
+        @include flex(column, nowrap, center, center);
+
+        &__icon {
+            width: 100%;
+            max-width: 350px;
+            height: 220px;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .connection-form {
+            height: 50vh;
+
+            .form-container {
+                @include flex(column, nowrap, center, center);
+
+                ul {
+                    display: flex;
+                    align-items: center;
+
+                    li {
+                        background-color: color(third);
+                        padding: 10px 20px;
+
+                        &.active-btn {
+                            background-color: color(fourth);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

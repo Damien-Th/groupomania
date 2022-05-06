@@ -1,0 +1,14 @@
+$primary: #fc2e07;
+$secondary: #fcd4d3 ;
+$third: #fcf2f1;
+$fourth: #fc9781;
+
+
+$html-font-size: 16px;
+
+:root {
+	--primary: #{$primary};
+	--secondary: #{$secondary};
+	--third: #{$third};
+	--fourth: #{$fourth};
+}
