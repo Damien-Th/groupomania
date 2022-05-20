@@ -1,26 +1,27 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const connection = require('../connection');
 
-const Post = connection.define('Post', {
+const Like = connection.define('Like', {
     id: {
         type: DataTypes.INTEGER(11),
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
     },
-    user_id: {
+    type : {
+        type: DataTypes.ENUM({
+            values: ['Post', 'Comment']
+          })
+    },
+    type_id: {
         type: DataTypes.INTEGER(11),
         allowNull: false
     },
-    content: {
-        type: DataTypes.TEXT,
-        allowNull: true
+    is_liked: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     },
-    image: {
-        type: DataTypes.STRING(120),
-        allowNull: true
-    }
    
 }, { paranoid: true} )
 
-module.exports = Post
+module.exports = Like

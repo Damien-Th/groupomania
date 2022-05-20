@@ -15,5 +15,9 @@ const sequelize = new Sequelize(`${DB_NAME}`, `${DB_USER}`, `${DB_PASSWORD}`, {
     }
 });
 
+sequelize.sync(err => {
+    console.log('Database Sync Error', err)
+})
+
 module.exports = sequelize
 global.sequelize = sequelize

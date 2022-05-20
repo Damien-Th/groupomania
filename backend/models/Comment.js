@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const connection = require('../connection');
 
-const Post = connection.define('Post', {
+const Comment = connection.define('Comment', {
     id: {
         type: DataTypes.INTEGER(11),
         primaryKey: true,
@@ -9,6 +9,10 @@ const Post = connection.define('Post', {
         allowNull: false
     },
     user_id: {
+        type: DataTypes.INTEGER(11),
+        allowNull: false
+    },
+    post_id: {
         type: DataTypes.INTEGER(11),
         allowNull: false
     },
@@ -23,4 +27,4 @@ const Post = connection.define('Post', {
    
 }, { paranoid: true} )
 
-module.exports = Post
+module.exports = Comment

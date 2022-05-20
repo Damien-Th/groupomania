@@ -1,39 +1,41 @@
-const bcrypt = require('bcrypt');
-const  jwt = require('jsonwebtoken');
 const User = require('../models/User');
 require('dotenv').config()
 
-exports.signup = (req, res, netx) => {
-    bcrypt.hash(req.body.password, 10)
-    .then(hash => {
-        const user = new User({
-            email: req.body.email,
-            password: hash
-        })
-        user.save()
-        .then(() => res.status(201).json({message: 'Utilisateur créé !'}))
-        .catch(error => res.status(400).json({ error }));
+// CRUD
+
+exports.getAllUsers = (req, res, netx) => {
+    User.findAll()
+    .then(users => {
+       res.send(users);
     })
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.login = (req, res, netx) => {
-    User.findOne({email: req.body.email})
+exports.getOneUser = (req, res, netx) => {
+    User.findOne({where: {id: req.params.id}})
     .then(user => {
-        if(!user) return res.status(401).json({error: 'Utilisateur non trouvé !'});
-        bcrypt.compare(req.body.password, user.password)
-        .then(valid => {
-            if(!valid) return res.status(401).json({error: 'Mot de passe incorrect'});
-            res.status(200).json({
-                userId: user._id,
-                token: jwt.sign(
-                    { userId: user._id },
-                    `${process.env.NODE_SECRETKEY}`,
-                    {expiresIn: '24h'}
-                )
-            })
-        })
-        .catch(error => res.status(500).json({ error }));
+       res.send(user);
     })
     .catch(error => res.status(500).json({ error }));
-}
+};
+
+exports.modifyUser = (req, res, netx) => {
+    User.findOne({where: {id: req.params.id}})
+    .then(user => {
+       user.username = req.body.username;
+       user.save()
+       .then(() => res.status(201).json({message: 'Utilisateur modifié !'}))
+       .catch(error => res.status(400).json({ error }));
+    })
+    .catch(error => res.status(500).json({ error }));
+};
+
+exports.deleteUser = (req, res, netx) => {
+    User.findOne({where: {id: req.params.id}})
+    .then(user => {
+       user.destroy()
+       .then(() => res.status(201).json({message: 'Utilisateur supprimé !'}))
+       .catch(error => res.status(400).json({ error }));
+    })
+    .catch(error => res.status(500).json({ error }));
+};
