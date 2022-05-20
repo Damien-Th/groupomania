@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const connection = require('../connection');
+const Post = require('./Post');
 
 const User = connection.define('User', {
     id: {
@@ -43,6 +44,9 @@ const User = connection.define('User', {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
-}, { paranoid: true} )
+}, { paranoid: true } );
+
+
+    User.hasMany(Post);
 
 module.exports = User

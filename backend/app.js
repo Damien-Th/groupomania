@@ -6,6 +6,7 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
+const adminRoutes = require('./routes/admin');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -34,6 +35,6 @@ app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/like', likeRoutes);
-
+app.use('/api/admin', adminRoutes);
 
 module.exports = app;

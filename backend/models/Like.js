@@ -17,10 +17,6 @@ const Like = connection.define('Like', {
         type: DataTypes.INTEGER(11),
         allowNull: false
     },
-    is_liked: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-    },
    
 }, { paranoid: true} )
 
