@@ -23,6 +23,7 @@ exports.modifyUser = (req, res, netx) => {
     User.findOne({where: {id: req.params.id}})
     .then(user => {
        user.username = req.body.username;
+       user.is_admin = req.body.is_admin;
        user.save()
        .then(() => res.status(201).json({message: 'Utilisateur modifié !'}))
        .catch(error => res.status(400).json({ error }));

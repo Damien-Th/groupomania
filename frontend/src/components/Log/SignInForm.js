@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
+const  URL_SERVER = process.env.REACT_APP_URL_SERVER;
+
 const SignInForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -7,7 +9,7 @@ const SignInForm = () => {
         e.preventDefault();
         axios({
             method: "POST",
-            url: 'http://localhost:3000/api/auth/signin',
+            url: `${URL_SERVER}/api/auth/signin`,
             withCredentials: true,
             data: {
                 email,
@@ -19,6 +21,7 @@ const SignInForm = () => {
                 console.log("error")
             }else {
                 console.log("success")
+                console.log(res.body)
             }
         })
         .catch((err) => {

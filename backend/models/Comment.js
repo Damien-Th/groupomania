@@ -8,14 +8,6 @@ const Comment = connection.define('Comment', {
         autoIncrement: true,
         allowNull: false
     },
-    user_id: {
-        type: DataTypes.INTEGER(11),
-        allowNull: false
-    },
-    post_id: {
-        type: DataTypes.INTEGER(11),
-        allowNull: false
-    },
     content: {
         type: DataTypes.TEXT,
         allowNull: true

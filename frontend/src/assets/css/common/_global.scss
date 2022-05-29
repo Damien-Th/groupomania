@@ -13,3 +13,20 @@ li {
 a {
     text-decoration: none;
 }
+
+.container {
+  max-width: 1512px;
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  @media only screen and (max-width: 1700px) {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+  @media only screen and (max-width: 599px) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+

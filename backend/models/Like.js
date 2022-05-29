@@ -8,7 +8,7 @@ const Like = connection.define('Like', {
         autoIncrement: true,
         allowNull: false
     },
-    type : {
+    type: {
         type: DataTypes.ENUM({
             values: ['Post', 'Comment']
           })

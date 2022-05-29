@@ -12,6 +12,20 @@ const cors = require('cors');
 
 connection;
 
+// Associations
+const Post = require('./models/Post');
+const User = require('./models/User');
+const Comment = require('./models/Comment');
+
+User.hasMany(Post, { foreignKey: 'user_id' });
+Post.belongsTo(User, { foreignKey: 'user_id' });
+
+User.hasMany(Comment, { foreignKey: 'user_id' });
+Comment.belongsTo(User, { foreignKey: 'user_id' });
+
+Post.hasMany(Comment, { foreignKey: 'post_id' });
+Comment.belongsTo(Post, { foreignKey: 'post_id' });
+
 try {
     sequelize.authenticate();
     console.log('Connection has been established successfully.');
@@ -29,6 +43,8 @@ app.use((req, res, next) => {
 app.use(cors({origin: 'http://localhost:3006', credentials: true }))
 app.use(express.json());
 app.use(cookieParser());
+
+// Routes
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);

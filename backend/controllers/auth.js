@@ -6,7 +6,7 @@ const maxAge = parseInt(process.env.MAXAGE) * 60 * 60 * 1000;
 
 // Authentification
 
-exports.signup = (req, res, netx) => {
+exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
         const user = new User({
@@ -20,7 +20,7 @@ exports.signup = (req, res, netx) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.signin = (req, res, netx) => {
+exports.signin = (req, res, next) => {
     User.findOne({where: {email: req.body.email}})
     .then(user => {
         if(!user) return res.status(401).json({error: 'Utilisateur non trouvé !'});
@@ -35,7 +35,7 @@ exports.signin = (req, res, netx) => {
     .catch(error => res.status(500).json({ error }));
 }
 
-exports.signout = (req, res, netx) => {
+exports.signout = (req, res, next) => {
 
     res.clearCookie('jwt').status(200).json({ message: 'Cookie removed' }).end();
 }

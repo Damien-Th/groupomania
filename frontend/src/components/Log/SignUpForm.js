@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
+const  URL_SERVER = process.env.REACT_APP_URL_SERVER;
+
 const SignUpForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -7,7 +9,8 @@ const SignUpForm = () => {
         e.preventDefault();
         axios({
             method: "POST",
-            url: 'http://localhost:3000/api/auth/signup',
+            url: `${URL_SERVER}/api/auth/signup`,
+            withCredentials: true,
             data: {
                 email,
                 password,
@@ -17,7 +20,18 @@ const SignUpForm = () => {
             if(res.data.errors) {
                 console.log("error")
             }else {
-                window.location = '/';
+                axios({
+                    method: "POST",
+                    url: `${URL_SERVER}/api/auth/signin`,
+                    withCredentials: true,
+                    data: {
+                        email,
+                        password,
+                    },
+                })
+                .then(() =>  {
+                    window.location = '/';
+                });
             }
         })
         .catch((err) => {

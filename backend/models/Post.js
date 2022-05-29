@@ -2,16 +2,11 @@ const { Sequelize, DataTypes } = require('sequelize');
 const connection = require('../connection');
 const User = require('./User');
 
-
 const Post = connection.define('Post', {
     id: {
         type: DataTypes.INTEGER(11),
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
-    },
-    user_id: {
-        type: DataTypes.INTEGER(11),
         allowNull: false
     },
     content: {
@@ -25,7 +20,5 @@ const Post = connection.define('Post', {
    
 }, { paranoid: true } );
 
-
-    // Post.belongsTo(User, { targetKey: 'id', foreignKey: 'post_id'});
 
 module.exports = Post

@@ -1,0 +1,42 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.adminPanel-Wrapper {
+    @include flex(row, nowrap, initial, initial)
+}
+
+.Asidebar {
+    width: 100%;
+    max-width: 0;
+}
+
+.barTop {
+    background-color: color(primary);
+    height: 60px
+}
+
+.myTable {
+    width: 100%;
+    &-content {
+        width: 100%;
+        thead {
+            width: 100%;
+
+            tr {
+                background-color: color(fourth);
+            }
+        }
+
+        tbody {
+
+            tr {
+                height: 35px;
+                background-color: color(secondary);
+                td {
+                    text-align: center;
+                }
+            }
+            
+        }
+    }
+}
