@@ -1,39 +1,25 @@
 const express = require('express');
 const app = express();
 const connection = require('./connection');
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
-const postRoutes = require('./routes/post');
-const commentRoutes = require('./routes/comment');
-const likeRoutes = require('./routes/like');
-const adminRoutes = require('./routes/admin');
+const func  = require('./function');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const cors = require('cors');
-require('dotenv').config()
-const ENV = process.env.ENV;
 
 connection;
 
-if(ENV === 'development') {
+// Associations
 
-    // Associations
-    const Post = require('./models/Post');
-    const User = require('./models/User');
-    const Comment = require('./models/Comment');
-    const Like = require('./models/Like');
+const Post = require('./models/Post');
+const User = require('./models/User');
+const Comment = require('./models/Comment');
+const Like = require('./models/Like');
 
-    User.hasMany(Post, { foreignKey: 'user_id' });
-    Post.belongsTo(User, { foreignKey: 'user_id' });
+func.hasMany(User, Post, 'user_id')
+func.hasMany(User, Comment, 'user_id')
+func.hasMany(Post, Comment, 'post_id')
+func.belongsTo(Like, User, 'user_id')
 
-    User.hasMany(Comment, { foreignKey: 'user_id' });
-    Comment.belongsTo(User, { foreignKey: 'user_id' });
-
-    Post.hasMany(Comment, { foreignKey: 'post_id' });
-    Comment.belongsTo(Post, { foreignKey: 'post_id' });
-
-    Like.belongsTo(User, { foreignKey: 'user_id' });
-}
 
 try {
     sequelize.authenticate();
@@ -55,6 +41,12 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(cookieParser());
 
 // Routes
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post');
+const commentRoutes = require('./routes/comment');
+const likeRoutes = require('./routes/like');
+const adminRoutes = require('./routes/admin');
 
 app.use('/api/refresh', authRoutes);
 app.use('/api/auth', authRoutes);

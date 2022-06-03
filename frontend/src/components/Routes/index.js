@@ -6,6 +6,7 @@ import Profil from '../../pages/Profil'
 import Admin from '../../pages/Admin'
 
 const index = () => {
+
     return (
         <Router>
             <Routes>

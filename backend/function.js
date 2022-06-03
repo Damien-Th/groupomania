@@ -7,6 +7,8 @@ const MAXAGE = process.env.MAXAGE;
 const REFRESH_MAXAGE = process.env.REFRESH_MAXAGE;
 const MAXAGE_COOKIES = parseInt(process.env.MAXAGE_COOKIES) * 60 * 60 * 1000;
 
+// JsonWebToken
+
 exports.createToken = (id) => {
    return jwt.sign({id}, SECRETKEY, {
     expiresIn: MAXAGE,
@@ -31,3 +33,14 @@ exports.verifyToken = (refreshToken, req, res) => {
 exports.setCookie = (res, refreshToken) => {
    return res.cookie('jwtRefresh', refreshToken, {httpOnly: true, maxAge: MAXAGE_COOKIES, secure: false})
 };
+
+// Associations
+
+exports.belongsTo = (tab1, tab2, key) => {
+   return tab1.belongsTo(tab2, { foreignKey: key });
+}
+
+exports.hasMany = (tab1, tab2, key) => {
+   return tab1.hasMany(tab2, { foreignKey: key }),
+   tab2.belongsTo(tab1, { foreignKey: key });
+}
