@@ -18,7 +18,7 @@ const Post = connection.define('Post', {
         allowNull: true
     }
    
-}, { paranoid: true } );
+}, { timestamps: false, paranoid: true } );
 
 
 module.exports = Post

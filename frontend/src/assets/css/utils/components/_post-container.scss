@@ -1,0 +1,41 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.post-wrapper {
+    display: flex;
+    color: color(white);
+    background-color: color(third);
+    border-radius: 5px;
+    width: 100%;
+    margin: 10px auto;
+    padding: 12px 16px;
+
+    &__picture {
+        width: 200px;
+        background-color: color(fourth);
+        margin-right: 20px;
+    }
+
+    .post-wrapper__content {
+        padding-right: 40px;
+    }
+
+    .btn-container {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: auto;
+        padding-right: 40px;
+        margin-top: 20px
+    }
+
+    .like-comment--count {
+        @include flex(row, nowrap, space-between, center);
+        margin-top: 10px;
+    
+        svg {
+            color: color(primary);
+        }
+    }
+}

@@ -1,3 +1,6 @@
+@import "./variables";
+@import "./mixins";
+
 *,
 *:after,
 *:before {
@@ -12,6 +15,12 @@ li {
 
 a {
     text-decoration: none;
+}
+
+body {
+  background-color: color(fourth);
+  // background-color: color(white);
+
 }
 
 .container {

@@ -1,8 +1,12 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const func = require('../function');
-require('dotenv').config()
-const maxAge = parseInt(process.env.MAXAGE) * 60 * 60 * 1000;
+
+exports.token = (req, res, next) => {
+    const refreshToken = req.cookies['jwtRefresh'];
+    if(refreshToken === null) return res.sendStatus(401)
+    func.verifyToken(refreshToken, req, res)
+};
 
 // Authentification
 
@@ -11,13 +15,16 @@ exports.signup = (req, res, next) => {
     .then(hash => {
         const user = new User({
             email: req.body.email,
-            password: hash
+            password: hash,
+            user_img: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         })
         user.save()
         .then(() => res.status(201).json({message: 'Utilisateur créé !'}))
         .catch(error => res.status(400).json({ error }));
     })
-    .catch(error => res.status(500).json({ error }));
+    // .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ error, Message: req }));
+
 };
 
 exports.signin = (req, res, next) => {
@@ -28,7 +35,9 @@ exports.signin = (req, res, next) => {
         .then(valid => {
             if(!valid) return res.status(401).json({error: 'Mot de passe incorrect'});
             const token = func.createToken(user.id);
-            res.cookie('jwt', token, {httpOnly: true, maxAge, secure: false}).status(200).json({ userId: user.id })
+            const refreshToken = func.refreshToken(user.id);
+            const setCookie = func.setCookie(res, refreshToken)
+            setCookie.status(201).json({ message: 'Cookies created', accessToken : token})
         })
         .catch(error => res.status(500).json({ error }));
     })
@@ -36,6 +45,5 @@ exports.signin = (req, res, next) => {
 }
 
 exports.signout = (req, res, next) => {
-
     res.clearCookie('jwt').status(200).json({ message: 'Cookie removed' }).end();
 }

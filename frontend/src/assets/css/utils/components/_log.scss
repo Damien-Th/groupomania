@@ -1,7 +1,7 @@
 @import "../../common/variables";
 @import "../../common/mixins";
 
-.profil-page {
+.login-page {
     height: 100vh;
     @include flex(row, nowrap, center, center);
 

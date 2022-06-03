@@ -1,2 +1,10 @@
 @import "common/common";
 @import "utils/utils";
+@import "pages/pages";
+
+
+.sidebar-container {
+    width: 500px;
+    background-color: color(fifth);
+    height: 100vh;
+}

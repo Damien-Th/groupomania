@@ -21,7 +21,6 @@ const SignInForm = () => {
                 console.log("error")
             }else {
                 console.log("success")
-                console.log(res.body)
             }
         })
         .catch((err) => {

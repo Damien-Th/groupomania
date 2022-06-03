@@ -10,7 +10,8 @@ const Like = connection.define('Like', {
     },
     type: {
         type: DataTypes.ENUM({
-            values: ['Post', 'Comment']
+            values: ['Post', 'Comment'],
+            allowNull: false
           })
     },
     type_id: {
@@ -18,6 +19,6 @@ const Like = connection.define('Like', {
         allowNull: false
     },
    
-}, { paranoid: true} )
+}, { timestamps: false, paranoid: true} )
 
 module.exports = Like

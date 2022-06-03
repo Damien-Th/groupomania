@@ -8,23 +8,32 @@ const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
 const adminRoutes = require('./routes/admin');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const cors = require('cors');
+require('dotenv').config()
+const ENV = process.env.ENV;
 
 connection;
 
-// Associations
-const Post = require('./models/Post');
-const User = require('./models/User');
-const Comment = require('./models/Comment');
+if(ENV === 'development') {
 
-User.hasMany(Post, { foreignKey: 'user_id' });
-Post.belongsTo(User, { foreignKey: 'user_id' });
+    // Associations
+    const Post = require('./models/Post');
+    const User = require('./models/User');
+    const Comment = require('./models/Comment');
+    const Like = require('./models/Like');
 
-User.hasMany(Comment, { foreignKey: 'user_id' });
-Comment.belongsTo(User, { foreignKey: 'user_id' });
+    User.hasMany(Post, { foreignKey: 'user_id' });
+    Post.belongsTo(User, { foreignKey: 'user_id' });
 
-Post.hasMany(Comment, { foreignKey: 'post_id' });
-Comment.belongsTo(Post, { foreignKey: 'post_id' });
+    User.hasMany(Comment, { foreignKey: 'user_id' });
+    Comment.belongsTo(User, { foreignKey: 'user_id' });
+
+    Post.hasMany(Comment, { foreignKey: 'post_id' });
+    Comment.belongsTo(Post, { foreignKey: 'post_id' });
+
+    Like.belongsTo(User, { foreignKey: 'user_id' });
+}
 
 try {
     sequelize.authenticate();
@@ -42,10 +51,12 @@ app.use((req, res, next) => {
 
 app.use(cors({origin: 'http://localhost:3006', credentials: true }))
 app.use(express.json());
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(cookieParser());
 
 // Routes
 
+app.use('/api/refresh', authRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);

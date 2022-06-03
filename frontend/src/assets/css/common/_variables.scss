@@ -1,14 +1,19 @@
-$primary: #fc2e07;
-$secondary: #fcd4d3 ;
-$third: #fcf2f1;
-$fourth: #fc9781;
+$primary: #FD2D01;
+$secondary: #FFD7D7 ;
+$third: #1b2730; //post
 
+$fourth: #05141c; // body
+$fifth: #28353e; // btn
 
-$html-font-size: 16px;
+$white: white;
+$black: black;
 
 :root {
 	--primary: #{$primary};
 	--secondary: #{$secondary};
 	--third: #{$third};
 	--fourth: #{$fourth};
+	--fifth: #{$fifth};
+	--white: #{$white};
+	--black: #{$black};
 }

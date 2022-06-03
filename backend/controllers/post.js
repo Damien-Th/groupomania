@@ -19,6 +19,7 @@ exports.createPost = (req, res, netx) => {
 exports.getAllPosts = (req, res, netx) => {
     Post.findAll()
     .then(posts => {
+      console.log(res, req)
        res.send(posts);
     })
     .catch(error => res.status(500).json({ error }));

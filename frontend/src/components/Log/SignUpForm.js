@@ -1,36 +1,51 @@
 import React, {useState} from 'react';
-import axios from 'axios';
-const  URL_SERVER = process.env.REACT_APP_URL_SERVER;
+import { useNavigate } from 'react-router-dom';
+import axios, { instanceAxios } from '../../api/Axios'
+
 
 const SignUpForm = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [image, setImage] = useState('');
+
+    const inputImage = (e) => {
+        setImage(e)
+        console.log('is ' + image)
+        console.log(e.target.files[0].name)
+    }
+
+    const formData = new FormData()
+    formData.append("signin_img", image)
+    formData.append('email', email)
+    formData.append('password', password )
+
     const handleLogin = (e) => {
         e.preventDefault();
-        axios({
-            method: "POST",
-            url: `${URL_SERVER}/api/auth/signup`,
-            withCredentials: true,
-            data: {
-                email,
-                password,
-            },
-        })
+ 
+        axios.post('/api/auth/signup', formData)
         .then((res) => {
             if(res.data.errors) {
                 console.log("error")
             }else {
-                axios({
+                instanceAxios({
                     method: "POST",
-                    url: `${URL_SERVER}/api/auth/signin`,
-                    withCredentials: true,
+                    url: "/api/auth/signin",
                     data: {
                         email,
                         password,
                     },
                 })
-                .then(() =>  {
-                    window.location = '/';
+                .then((res) =>  {
+                    instanceAxios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
+                    instanceAxios.get("/api/post")
+                    .then((res) => {
+                        if(res.data.errors) {
+                            console.log("error")
+                        }else {
+                            navigate('/')
+                        }
+                    })
                 });
             }
         })
@@ -48,6 +63,9 @@ const SignUpForm = () => {
             <div className='SignUpForm-input'>
                 <label htmlFor="userPwd"></label>
                 <input placeholder="Mot de passe" type="text" id="userPwd" name="password" onChange={(e) => setPassword(e.target.value)} value={password}/>
+            </div>
+            <div>
+            <input type="file" id="signin_img" name="signin_img" accept="image/png, image/jpeg" onChange={(e) => inputImage(e.target.value)} value={image}/>
             </div>
             <div className="SignUpForm-btn">
                 <input type="submit" value="Se connecter"/>

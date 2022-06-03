@@ -17,6 +17,6 @@ const Comment = connection.define('Comment', {
         allowNull: true
     }
    
-}, { paranoid: true} )
+}, { timestamps: false, paranoid: true} )
 
 module.exports = Comment

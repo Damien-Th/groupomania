@@ -1,5 +1,6 @@
 const User = require('../models/User');
-require('dotenv').config()
+const fs = require('fs');
+
 
 // CRUD
 

@@ -43,7 +43,7 @@ const User = connection.define('User', {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
-}, { paranoid: true } );
+}, { timestamps: false, paranoid: true } );
 
 
 module.exports = User
