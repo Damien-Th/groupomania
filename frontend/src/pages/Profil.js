@@ -9,7 +9,8 @@ const Profil  = () => {
 useEffect(() => {
    
     instanceAxios.get('/api/refresh')
-    .then(res =>  res.data);
+    .then(res =>  res.data)
+    .catch(() => window.location.href = "/login");
 
 }, []);
     return (
