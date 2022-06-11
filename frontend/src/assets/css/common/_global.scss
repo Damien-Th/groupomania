@@ -18,9 +18,8 @@ a {
 }
 
 body {
-  background-color: color(fourth);
-  // background-color: color(white);
-
+  background-color: color(white);
+  color: color(third); 
 }
 
 .container {
@@ -36,6 +35,19 @@ body {
   @media only screen and (max-width: 599px) {
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+
+form {
+  input {
+    border: none;
+    background-color: transparent;
+    color: color(third);
+    
+    &:focus {
+      outline: none;
+    }
   }
 }
 

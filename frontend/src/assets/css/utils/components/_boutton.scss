@@ -8,8 +8,8 @@
             
             button {
                 @include flex(row, nowrap, center, center);
-                background-color: color(fifth);
-                color: color(white);
+                background-color: color(secondary);
+                color: color(thrid);
                 width: 100%;
                 border-radius: 5px;
                 padding: 12px 8px;

@@ -1,0 +1,53 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.Form-input {
+    border: solid 1px color(third);
+
+    input {
+        font-size: rem(16);
+        width: calc(100% - 22px);
+    }
+
+    svg {
+        width: 14px;
+        height: 14px;
+        margin-right: 8px;
+        transform: translateY(1px);
+    }
+}
+
+.Form-input-btn {
+    background-color: color(primary);
+    text-align: center;
+    cursor: pointer;
+    transition: background-color .3s ease-in;
+    
+    input {
+        color: color(white);
+        font-weight: bold;
+        font-size: rem(18);
+        cursor: pointer;
+    }
+
+    &:hover {
+        background-color: color(fourth);
+    }
+}
+
+.style-input {
+    border-radius: 15px;
+    padding: 10px 8px;
+    width: 100%;
+    margin-bottom: 20px;
+
+    &-2 {
+        svg {
+            cursor: pointer;
+        }
+    }
+
+    .pwdInput {
+        width: calc(100% - 44px);
+    }
+}

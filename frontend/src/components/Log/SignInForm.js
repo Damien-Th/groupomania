@@ -1,16 +1,21 @@
 import React, {useState} from 'react';
-import axios from 'axios';
-const  URL_SERVER = process.env.REACT_APP_URL_SERVER;
+import { instanceAxios } from '../../api/Axios'
+import { useNavigate } from 'react-router-dom';
+import PaswordInput from './../Form/PasswordInput'
+import { FaUserAlt } from 'react-icons/fa';
 
 const SignInForm = () => {
+ 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+
+
     const handleLogin = (e) => {
         e.preventDefault();
-        axios({
+        instanceAxios({
             method: "POST",
-            url: `${URL_SERVER}/api/auth/signin`,
-            withCredentials: true,
+            url: "/api/auth/signin",
             data: {
                 email,
                 password,
@@ -20,7 +25,15 @@ const SignInForm = () => {
             if(res.data.errors) {
                 console.log("error")
             }else {
-                console.log("success")
+                instanceAxios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
+                instanceAxios.get("/api/post")
+                .then((res) => {
+                    if(res.data.errors) {
+                        console.log("error")
+                    }else {
+                        navigate('/')
+                    }
+                })
             }
         })
         .catch((err) => {
@@ -29,20 +42,20 @@ const SignInForm = () => {
     };
     return (
         <div className='SignInForm'>
-        <form action="" onSubmit={handleLogin}>
-            <div className='SignInForm-input'>
-                <label htmlFor='email'></label>
-                <input placeholder="Adresse e-mail" type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
-            </div>
-            <div className='SignInForm-input'>
-                <label htmlFor="userPwd"></label>
-                <input placeholder="Mot de passe" type="text" id="userPwd" name="password" onChange={(e) => setPassword(e.target.value)} value={password}/>
-            </div>
-            <div className="SignInForm-btn">
-                <input type="submit" value="Se connecter"/>
-            </div>
-        </form>
-    </div>
+            <form action="" onSubmit={handleLogin}>
+                <div className='Form-input style-input'>
+                    <FaUserAlt/>
+                    <label htmlFor='email'></label>
+                    <input placeholder="Adresse e-mail" type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
+                </div>
+                <div className='Form-input style-input style-input-2'>
+                    <PaswordInput pwd={password} setPwd={setPassword}/>
+                </div>
+                <div className="Form-input-btn style-input">
+                    <input type="submit" value="Se connecter"/>
+                </div>
+            </form>
+        </div>
     );
 };
 export default SignInForm;
