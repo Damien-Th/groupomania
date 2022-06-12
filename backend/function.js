@@ -9,24 +9,23 @@ const MAXAGE_COOKIES = parseInt(process.env.MAXAGE_COOKIES) * 60 * 60 * 1000;
 
 // JsonWebToken
 
-exports.createToken = (id) => {
-   return jwt.sign({id}, SECRETKEY, {
+exports.createToken = (id, isAdmin) => {
+   return jwt.sign({id, isAdmin}, SECRETKEY, {
     expiresIn: MAXAGE,
    })
 };
 
-exports.refreshToken = (id) => {
-   return jwt.sign({id}, REFRESH_SECRETKEY, {
+exports.refreshToken = (id, isAdmin) => {
+   return jwt.sign({id, isAdmin}, REFRESH_SECRETKEY, {
       expiresIn: REFRESH_MAXAGE,
    })
 };
 
 exports.verifyToken = (refreshToken, req, res) => {
    return jwt.verify(refreshToken, REFRESH_SECRETKEY , (err, user) => {
-      console.log(err)
       if(err) return res.sendStatus(403)
-      const accessToken = this.createToken(user.id)
-      res.setHeader('Authorization', 'Bearer ' + accessToken).status(200).json({ Message: 'token refreshed' })
+      const accessToken = this.createToken(user.id, user.isAdmin)
+      res.setHeader('Authorization', 'Bearer ' + accessToken).status(200).json({ Message: 'token refreshed', accessToken : accessToken })
   })
 };
 

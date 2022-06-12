@@ -1,18 +1,19 @@
-// import React from 'react';
+import React, { useEffect } from 'react';
+import { instanceAxios } from '../api/Axios';
 // import UserList from '../components/UserList';
 
-import React, {useEffect} from 'react';
-import instanceAxios from '../api/Axios';
 
 const Profil  = () => {
 
-useEffect(() => {
+    useEffect(() => {
    
-    instanceAxios.get('/api/refresh')
-    .then(res =>  res.data)
-    .catch(() => window.location.href = "/login");
+        instanceAxios.get('/api/refresh')
+        .then(res =>  res.data)
+        .catch(() => window.location.href = "/login");
+    
+      }, []);
 
-}, []);
+
     return (
         <div className='profil-page'>
            hello profil

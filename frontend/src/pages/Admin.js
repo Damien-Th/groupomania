@@ -1,32 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios"
-const  URL_SERVER = process.env.REACT_APP_URL_SERVER;
+import { instanceAxios } from '../api/Axios';
+import {ImBin} from 'react-icons/im';
+import jwt_decode from "jwt-decode";
 
 const Admin = () => {
 
     const [UserData, setUserData] = useState([]);
-    // const [checked, setChecked] = React.useState();
+    const [AdminData, setAdminData] = useState({});
+
+    useEffect(() => {
+   
+        instanceAxios.get('/api/refresh')
+        .then((res) =>  {
+            const Admin = jwt_decode(res.data.accessToken);
+            instanceAxios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
+            instanceAxios.get(`/api/admin/${Admin.id}`)
+            .then(response => setAdminData(response.data));
+            instanceAxios.get('/api/admin')
+            .then(response => setUserData(response.data));
+        })
+        .catch(() => window.location.href = "/login");
+    
+      }, []);
+
+      console.log(AdminData)
 
     const deleteUSer = (userID) => {
-        axios.delete(`${URL_SERVER}/api/admin/${userID}`)
+        instanceAxios.delete(`/api/admin/${userID}`)
         .then(() =>  {
-            axios.get(`${URL_SERVER}/api/admin`)
+            instanceAxios.get('/api/admin')
             .then(response => setUserData(response.data));
         });
     };
 
-    const handleIsAdmin = (userID) => {
-        axios.put(`${URL_SERVER}/api/admin/${userID}`, { "is_admin": true })
-        .then(() =>  {
-            axios.get(`${URL_SERVER}/api/admin`)
-            .then(response => setUserData(response.data));
-        });
-    }
+    const handleIsAdmin = (e, user) => {
 
-    useEffect(() => {
-        axios.get(`${URL_SERVER}/api/admin`)
+        let admin_value = e.target.value;
+        admin_value === 'true' ? admin_value = false : admin_value = true;
+
+        instanceAxios({
+            method: "PUT",
+            url: `/api/admin/${user.id}`,
+            data: {
+                is_admin: admin_value
+            },
+        })
+        .then((res) => {  
+            instanceAxios.get('/api/admin')
             .then(response => setUserData(response.data));
-    }, []);
+        })
+
+    }
 
     return (
         <div>
@@ -53,9 +77,12 @@ const Admin = () => {
                                 <td key={'UserPassword_' + User.id}>{User.password}</td>
                                 <td key={'UserName_' + User.id}>{User.username}</td>
                                 <td key={'UserIsAdmins_' + User.id}>
-                                    <input onClick={() => handleIsAdmin(User.id)} type="checkbox" checked={User.is_admin ?  'checked' : ''}/>
+                                    <div className='switch-btn'>
+                                        <label htmlFor={`buttonGroup${User.id}`}></label>
+                                        <input onChange={(e) => handleIsAdmin(e, User)} id={`buttonGroup${User.id}`} type="checkbox" value={User.is_admin}/>
+                                    </div>
                                 </td> 
-                                <td onClick={() => deleteUSer(User.id)}>Supprimer</td> 
+                                <td onClick={() => deleteUSer(User.id)}><ImBin/></td> 
                             </tr>
                             )}
                         </tbody>

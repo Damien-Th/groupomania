@@ -1,0 +1,40 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.switch-btn {
+    background-color: color(third);
+    width: 45px;
+    height: 24px;
+    border-radius: 25px;
+    margin: auto;
+    overflow: hidden;
+
+    input[type="checkbox"]{
+        width: 45px;
+        height: 24px;
+        appearance: none;
+        position: relative;
+
+        &::before {
+            position: absolute;
+            background-color: color(white);
+            opacity: .5;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            content: '';
+            top: 50%;
+            bottom: 50%;
+            left: 2px;
+            transform: translateY(-50%);
+            transition: all .3s ease-in;
+        }
+       
+
+        &:checked::before {
+            left: 23px;
+            opacity: 1;
+        }
+    }
+
+}

@@ -22,8 +22,7 @@ exports.signup = (req, res, next) => {
         .then(() => res.status(201).json({message: 'Utilisateur créé !'}))
         .catch(error => res.status(400).json({ error }));
     })
-    // .catch(error => res.status(500).json({ error }));
-    .catch(error => console.log(req));
+    .catch(error => res.status(500).json({ error }));
 
 };
 
@@ -34,8 +33,8 @@ exports.signin = (req, res, next) => {
         bcrypt.compare(req.body.password, user.password)
         .then(valid => {
             if(!valid) return res.status(401).json({error: 'Mot de passe incorrect'});
-            const token = func.createToken(user.id);
-            const refreshToken = func.refreshToken(user.id);
+            const token = func.createToken(user.id, user.is_admin);
+            const refreshToken = func.refreshToken(user.id, user.is_admin);
             const setCookie = func.setCookie(res, refreshToken)
             setCookie.status(201).json({ message: 'Cookies created', accessToken : token})
         })

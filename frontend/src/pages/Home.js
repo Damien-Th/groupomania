@@ -16,6 +16,11 @@ const Home = () => {
     const share = <FiShare2 />
 
     useEffect(() => {
+
+        instanceAxios.get('/api/refresh')
+        .then(res =>  res.data)
+        .catch(() => window.location.href = "/login");
+
         instanceAxios.get('/api/post')
         .then(res =>  setPostData(res.data));
 
