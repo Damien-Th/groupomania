@@ -10,8 +10,8 @@ const SignUpForm = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userName, setUserName] = useState('');
-    const [nickName, setNickName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
 
     // const formData = new FormData()
     // formData.append("signin_img", image)
@@ -26,6 +26,8 @@ const SignUpForm = () => {
             url: "/api/auth/signup",
             data: {
                 email,
+                lastName,
+                firstName,
                 password,
             },
         })
@@ -69,13 +71,13 @@ const SignUpForm = () => {
                 </div>
                 <div className='Form-input style-input'>
                     <MdDriveFileRenameOutline/>
-                    <label htmlFor="userName"></label>
-                    <input placeholder="Nom complet" type="text" id="userName" name="userName" onChange={(e) => setUserName(e.target.value)} value={userName}/>
+                    <label htmlFor="lastName"></label>
+                    <input placeholder="Nom" type="text" id="lastName" name="last_Name" onChange={(e) => setLastName(e.target.value)} value={lastName}/>
                 </div>
                 <div className='Form-input style-input'>
                     <MdDriveFileRenameOutline/>
-                    <label htmlFor="nickName"></label>
-                    <input placeholder="Nom d'utilisateur" type="text" id="nickName" name="nickName" onChange={(e) => setNickName(e.target.value)} value={nickName}/>
+                    <label htmlFor="firstName"></label>
+                    <input placeholder="Prénom" type="text" id="firstName" name="first_Name" onChange={(e) => setFirstName(e.target.value)} value={firstName}/>
                 </div>
                 <div className='Form-input style-input style-input-2'>
                     <PaswordInput placeHolder='Mot de passe' pwd={password} setPwd={setPassword}/>

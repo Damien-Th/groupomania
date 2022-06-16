@@ -16,7 +16,9 @@ exports.signup = (req, res, next) => {
         const user = new User({
             email: req.body.email,
             password: hash,
-            user_img: `${req.protocol}://${req.get('host')}/images/${req.body.filename}`,
+            last_name: req.body.lastName,
+            first_name: req.body.firstName,
+            // user_img: `${req.protocol}://${req.get('host')}/images/${req.body.filename}`,
         })
         user.save()
         .then(() => res.status(201).json({message: 'Utilisateur créé !'}))

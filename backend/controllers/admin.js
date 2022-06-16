@@ -3,7 +3,7 @@ require('dotenv').config()
 
 // CRUD Admin
 
-exports.getAllUsers = (req, res, netx) => {
+exports.getAllUsers = (req, res, next) => {
     User.findAll()
     .then(users => {
        res.send(users);
@@ -11,7 +11,7 @@ exports.getAllUsers = (req, res, netx) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.getOneUser = (req, res, netx) => {
+exports.getOneUser = (req, res, next) => {
     User.findOne({where: {id: req.params.id}})
     .then(user => {
        res.send(user);
@@ -19,10 +19,10 @@ exports.getOneUser = (req, res, netx) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.modifyUser = (req, res, netx) => {
+exports.modifyUser = (req, res, next) => {
     User.findOne({where: {id: req.params.id}})
     .then(user => {
-    //    user.username = req.body.username;
+    //    user.last_name = req.body.lastname;
        user.is_admin = req.body.is_admin;
        user.save()
        .then(() => res.status(201).json({message: 'Utilisateur modifié !'}))
@@ -31,7 +31,7 @@ exports.modifyUser = (req, res, netx) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.deleteUser = (req, res, netx) => {
+exports.deleteUser = (req, res, next) => {
     User.findOne({where: {id: req.params.id}})
     .then(user => {
        user.destroy()

@@ -8,8 +8,6 @@ import { FiShare2 } from 'react-icons/fi';
 
 const Home = () => {
 
-
-
     const [PostData, setPostData] = useState([]);
     const heart = <FaRegHeart />
     const comment = <FaRegCommentDots />
@@ -40,8 +38,7 @@ const Home = () => {
 
                     <div>
                         <div className='post-wrapper__info'>
-                        {Post.User.username}
-                        {'@'+Post.User.username.replace(/ /g, '')}
+                        {Post.User.last_name} {Post.User.first_name}
                         </div>
                         <PostContainer content={Post.content}/>   
                         <div className='like-comment--count'>

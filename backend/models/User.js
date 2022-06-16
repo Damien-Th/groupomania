@@ -21,7 +21,12 @@ const User = connection.define('User', {
         allowNull: false,
         is: /^[0-9a-z]+$/i
     },
-    username: {
+    last_name: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        defaultValue: ''
+    },
+    first_name: {
         type: DataTypes.STRING(50),
         allowNull: false,
         defaultValue: ''
@@ -34,10 +39,6 @@ const User = connection.define('User', {
     bio: {
         type: DataTypes.TEXT,
         allowNull: true
-    },
-    is_valid: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
     },
     is_admin: {
         type: DataTypes.BOOLEAN,

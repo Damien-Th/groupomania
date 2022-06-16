@@ -1,0 +1,34 @@
+@import "../common/variables";
+@import "../common/mixins";
+@import "../common/fonts";
+
+.adminPanel-Wrapper {
+    @include flex(row, nowrap, initial, initial)
+}
+
+.myTable-content {
+
+    input {
+        border: none;
+        
+        &:focus {
+          outline: none;
+        }
+    }
+    
+    .icon-remove, .icon-editor {
+        width: 35px;
+        svg {
+            color: white;
+            cursor: pointer;
+        }
+    }
+
+    .icon-remove {
+        background-color: color(primary);
+    }
+
+    .icon-editor {
+        background-color: color(third);
+    }
+}
