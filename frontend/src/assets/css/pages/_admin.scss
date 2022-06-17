@@ -2,33 +2,78 @@
 @import "../common/mixins";
 @import "../common/fonts";
 
-.adminPanel-Wrapper {
-    @include flex(row, nowrap, initial, initial)
-}
 
-.myTable-content {
+.admin-container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
 
-    input {
-        border: none;
-        
-        &:focus {
-          outline: none;
+    &__title {
+        margin-bottom: 30px;
+        display: block
+    }
+
+    .search {
+        @include flex(row, nowrap, center, center);
+        height: 32px;
+        width: 100%;
+        border: solid 1px color(third);
+        border-radius: 5px;
+        padding: 6px 8px;
+        margin-bottom: 20px;
+    
+        svg {
+            transform: scale(1.4);
+            margin-right: 15px;
+        }
+    
+        input {
+            height: 100%;
+            width: 100%;
+            border: none;
+            &:focus {
+                outline: none;
+            }
         }
     }
     
-    .icon-remove, .icon-editor {
-        width: 35px;
-        svg {
-            color: white;
-            cursor: pointer;
+    .myTable {
+
+        th {
+            text-align: left;
+        }
+    
+        input {
+            border: none;
+            font-family: $main_font;
+            font-size: 16px;
+            color: color(third);
+            
+            &:focus {
+              outline: none;
+            }
+        }
+        
+        .icon-remove, .icon-editor {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            width: 30px;
+            svg {
+                color: white;
+                cursor: pointer;
+            }
+        }
+    
+        .icon-remove {
+            background-color: color(primary);
+        }
+    
+        .icon-editor {
+            background-color: color(third);
+            margin-right: 5px;
         }
     }
-
-    .icon-remove {
-        background-color: color(primary);
-    }
-
-    .icon-editor {
-        background-color: color(third);
-    }
 }
+

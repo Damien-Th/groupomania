@@ -25,12 +25,12 @@ exports.getAllComments = (req, res, netx) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.getOneComment = (req, res, netx) => {
-    Comment.findOne({where: {id: req.params.id}})
-    .then(comment => {
-       res.send(comment);
-    })
-    .catch(error => res.status(500).json({ error }));
+exports.getUserComments = (req, res, netx) => {
+  Comment.findAll({where: {user_id: req.params.id}})
+  .then(comment => {
+     res.send(comment);
+  })
+  .catch(error => res.status(500).json({ error }));
 };
 
 exports.modifyComment = (req, res, netx) => {
