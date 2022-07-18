@@ -1,0 +1,26 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.comment-Container {
+
+    .comment-Content {
+        margin: 20px 0;
+
+        .comment-wrapper {
+            @include flex(row, nowrap, initial, center);
+            gap: 18px;
+
+            p {
+                width: calc(100% - 65px);
+                border-bottom: solid 3px color(secondary);
+            }
+        }
+
+        .like-wrapper {
+            width: calc(100% - 135px);
+            margin: 0 auto;
+            margin-top: 5px;
+        }
+    }
+
+}

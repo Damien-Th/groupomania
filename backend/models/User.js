@@ -19,32 +19,36 @@ const User = connection.define('User', {
     password: {
         type: DataTypes.STRING(255),
         allowNull: false,
-        is: /^[0-9a-z]+$/i
-    },
-    last_name: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        defaultValue: ''
+        is: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
     },
     first_name: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        defaultValue: ''
     },
-    user_img: {
+    last_name: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+    },
+    picture: {
         type: DataTypes.STRING(150),
         allowNull: false,
-        defaultValue: ''
+        defaultValue: 'default.jpg'
+        
     },
-    bio: {
-        type: DataTypes.TEXT,
-        allowNull: true
+    biography : {
+        type: DataTypes.TEXT('tiny'),
+        allowNull: true,
+    },
+    slug : {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true
     },
     is_admin: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
-}, { timestamps: false, paranoid: true } );
+}, { timestamps: false, deletedAt: false, paranoid: true } );
 
 
 module.exports = User

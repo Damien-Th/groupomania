@@ -1,0 +1,43 @@
+@import "../common/variables";
+@import "../common/mixins";
+
+.setting {
+
+    background-color: color(fifth);
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr;
+        grid-column-gap: 15px;
+        grid-row-gap: 0px;
+        padding: 30px;
+        max-width: 1150px;
+        width: 100%;
+        margin: 0 auto;
+        
+        @media only screen and (max-width: 799px) {
+            @include flex(column, nowrap, center, center);
+            gap: 15px;
+          }
+
+        .setting-content { 
+            grid-area: 1 / 3 / 2 / 7; 
+            height: 100vh;
+    
+            @media only screen and (max-width: 799px) {
+                width: 100%;
+            }
+
+            .accordion-container {
+
+                .image-form-wrapper {
+                    @include flex(row, nowrap, initial, center);
+                    gap: 15px;
+                    margin-bottom: 15px;
+                }
+
+            }
+        }
+    }
+}

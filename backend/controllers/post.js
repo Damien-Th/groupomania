@@ -2,43 +2,43 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const func  = require('../function');
 
-func.hasMany(User, Post, 'user_id')
+exports.createPost = (req, res, next) => {
 
+  let imageName;
+  req.file === undefined ? imageName = req.body.image : imageName = req.file.filename
 
-exports.createPost = (req, res, netx) => {
-        const post = new Post({
-            user_id: req.body.user_id,
-            content: req.body.content
-        })
-      post.save()
-        .then(() => res.status(201).json({
-          message: 'Post enregistré !'
-        }))
-        .catch(error => {
-          res.status(400).json({
-            error
-          })
-        });
+  const post = new Post({
+      content: req.body.content,
+      image: imageName,
+      user_id: req.body.user_id
+  })
+  post.save()
+    .then(() => res.status(201).json({ 
+      message: 'Post cré !',
+      post
+    }))
+    .catch(error => {
+      res.status(400).json({
+        error
+      })
+    });
 };
 
-// exports.getAllPosts = (req, res, netx) => {
-//     Post.findAll()
-//     .then(posts => {
-//       console.log(res, req)
-//        res.send(posts);
-//     })
-//     .catch(error => res.status(500).json({ error }));
-// };
+exports.getAllPosts = (req, res, next) => {
 
-exports.getAllPosts = (req, res, netx) => {
-
-  Post.findAll({ include: User }).then(allPost => {
-       res.send(allPost);
-    })
+  Post.findAll({ include: {model: User, attributes: {exclude: ['password', 'email']} }, order: [["createdAt", "DESC"]] })
+    .then(allPost => res.send(allPost))
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.getOnePost = (req, res, netx) => {
+exports.getUserPosts = (req, res, next) => {
+
+  Post.findAll({ include: {model: User, where: {id: req.params.id}, attributes: {exclude: ['password']} }, order: [["createdAt", "DESC"]] })
+    .then(allPost => res.send(allPost))
+    .catch(error => res.status(500).json({ error }));
+};
+
+exports.getOnePost = (req, res, next) => {
     Post.findOne({where: {id: req.params.id}})
     .then(post => {
        res.send(post);
@@ -46,18 +46,36 @@ exports.getOnePost = (req, res, netx) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.modifyPost = (req, res, netx) => {
+exports.modifyPostText = (req, res, next) => {
     Post.findOne({where: {id: req.params.id}})
     .then(post => {
        post.content = req.body.content;
        post.save()
-       .then(() => res.status(201).json({message: 'Post modifié !'}))
+       .then(() => res.status(201).json({message: 'Texte du Poste modifié !'}))
        .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.deletePost = (req, res, netx) => {
+exports.modifyPostImage = (req, res, next) => {
+  Post.findOne({where: {id: req.params.id}})
+  .then(post => {
+    let imageName;
+    req.file === undefined ? imageName = req.body.image : imageName = req.file.filename;
+  
+    post.user_id = req.body.user_id;
+    post.image = imageName;
+     post.save()
+     .then(() => res.status(201).json({
+      message: 'Image du Poste modifié !',
+      post
+    }))
+     .catch(error => res.status(400).json({ error }));
+  })
+  .catch(error => res.status(500).json({ error }));
+};
+
+exports.deletePost = (req, res, next) => {
     Post.findOne({where: {id: req.params.id}})
     .then(post => {
        post.destroy()

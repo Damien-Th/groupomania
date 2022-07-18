@@ -1,0 +1,94 @@
+.accordion {
+    background-color: color(fifth);
+    color: color(third);
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: rem(20);
+    transition: 0.4s;
+  }
+  
+  .active, .accordion:hover {
+    background-color: color(third); 
+    color: color(white);
+  }
+
+  .active + .panel {
+    display: block;
+  }
+  
+  .panel {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+    overflow: hidden;
+
+    p {
+      text-align: justify;
+    }
+
+    span {
+        font-size: rem(18);
+        margin-top: 20px;
+        margin-bottom: 25px;
+        display: block;
+    }
+
+    .btn-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 25px auto;
+
+      input {
+        background-color: color(white);
+        border: solid 2px color(third);
+        color: color(third);
+        padding: 5px 12px;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all .3s ease-in;
+        border-radius: 5px;
+
+        &:hover {
+          background-color: color(third);
+          border: solid 2px color(third);
+          color: color(white);
+          cursor: pointer;
+        }
+      }
+
+      button {
+        background-color: color(primary);
+        color: white;
+        padding: 5px 12px;
+        font-weight: 600;
+        transition: all .3s ease-in;
+        border-radius: 5px;
+
+        &:hover {
+          background-color: color(fourth);
+        }
+      }
+    }
+
+
+    form {
+        margin: 12px 0;
+
+        .border {
+          border: solid 2px var(--third);
+          margin-bottom: 10px;
+          border-radius: 5px;
+          padding: 5px;
+        }
+
+        input.btn-submit {
+            margin: 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+    }
+  }

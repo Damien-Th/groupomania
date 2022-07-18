@@ -4,3 +4,6 @@
 # Dotenv
 .env.*
 .env
+
+# Images
+/images/user_*

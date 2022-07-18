@@ -1,8 +1,33 @@
 @import "../common/variables";
 @import "../common/mixins";
 
+.home {
 
+    background-color: color(fifth);
 
-.home-wrapper {
-    display: flex;
+    .container {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr;
+        grid-column-gap: 15px;
+        grid-row-gap: 0px;
+        padding: 30px;
+        max-width: 1150px;
+        width: 100%;
+        margin: 0 auto;
+        
+       
+        @media only screen and (max-width: 799px) {
+            @include flex(column, nowrap, center, center);
+            gap: 15px;
+          }
+
+        .home-content { 
+            grid-area: 1 / 3 / 2 / 7; 
+    
+            @media only screen and (max-width: 799px) {
+                width: 100%;
+            }
+        }
+    }
 }

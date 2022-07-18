@@ -1,6 +1,5 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const connection = require('../connection');
-const User = require('./User');
 
 const Post = connection.define('Post', {
     id: {
@@ -11,14 +10,14 @@ const Post = connection.define('Post', {
     },
     content: {
         type: DataTypes.TEXT,
-        allowNull: true
+        allowNull: true,
     },
     image: {
         type: DataTypes.STRING(120),
-        allowNull: true
-    }
-   
-}, { timestamps: false, paranoid: true } );
+        allowNull: true,
+    },
+    
+}, { timestamps: true, deletedAt: false, paranoid: false } );
 
 
 module.exports = Post

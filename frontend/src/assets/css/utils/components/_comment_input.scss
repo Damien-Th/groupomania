@@ -1,0 +1,22 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.comment_input {
+
+    @include flex(row, nowrap, initial, center);
+
+    .CommentForm {
+        margin-left: 15px;
+        padding: 14px 15px;
+        display: flex;
+        background-color: var(--fifth);
+        border-radius: 15px;
+        width: calc(100% - 65px);
+        color: var(--third);
+
+        input {
+            width: 100%;
+        }
+    }
+
+}

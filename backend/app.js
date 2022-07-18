@@ -15,9 +15,9 @@ const User = require('./models/User');
 const Comment = require('./models/Comment');
 const Like = require('./models/Like');
 
-func.hasMany(User, Post, 'user_id')
-func.hasMany(User, Comment, 'user_id')
-func.hasMany(Post, Comment, 'post_id')
+func.hasMany(User, Post, 'user_id', 'CASCADE ')
+func.hasMany(User, Comment, 'user_id', 'CASCADE')
+func.hasMany(Post, Comment, 'post_id', 'CASCADE')
 func.belongsTo(Like, User, 'user_id')
 
 
@@ -46,14 +46,11 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
-const adminRoutes = require('./routes/admin');
 
-app.use('/api/refresh', authRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/like', likeRoutes);
-app.use('/api/admin', adminRoutes);
 
 module.exports = app;

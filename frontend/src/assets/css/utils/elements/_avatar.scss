@@ -1,0 +1,28 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.avatar-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+  
+    &.avatar_big {
+      width: 80px;
+      height: 80px;
+    }
+  
+    &.avatar_small {
+      width: 40px;
+      height: 40px;
+    }
+
+    &.avatar_medium {
+      width: 50px;
+      height: 50px;
+    }
+  
+    img {
+      @include objectFit(cover, center, 100%, 100%);
+    }
+  }

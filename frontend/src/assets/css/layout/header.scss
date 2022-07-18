@@ -1,0 +1,245 @@
+@import "../common/variables";
+@import "../common/mixins";
+@import "../common/fonts";
+
+header.banner {
+    background-color: color(white);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    z-index: 999;
+    box-shadow: 0 -1px 5px 0 rgba(0, 0 ,0 ,1);
+
+    .container {
+        @include flex(row, nowrap, space-between, center);
+        padding: 0 32px;
+        max-width: 1150px;
+        width: 100%;
+        margin: 0 auto;
+
+        .logo-wrapper {
+            max-width: 250px;
+            width: 100%;
+            display: flex;
+
+            &.desktop {
+                @media only screen and (max-width: 599px) {
+                   display: none;
+                  }
+            }
+
+            &.mobile {
+                max-width: 50px;
+                @media only screen and (min-width: 599px) {
+                    display: none;
+                }
+            }
+
+            img {
+                @include objectFit(contain, center, 100%, 100%)
+            }
+        }
+
+        .profil-menu {
+            @include flex(row, nowrap, center, center);
+        
+
+            .menu-item {
+                position: relative;
+
+                span {
+                    color: color(third)
+                }
+
+                .profil-info {
+                    @include flex(row, nowrap, center, center);
+                    gap: 15px;
+
+                    .icon-menu {
+                        height: 22px;
+                        cursor: pointer;
+
+                        &.desktop {
+                            @media only screen and (max-width: 799px) {
+                                display: none;
+                            }
+                        }
+
+                        &.mobile {
+                            width: 20px;
+                            height: 20px;
+
+                            svg {
+                                width: 100%;
+                                height: 100%;
+                            }
+
+                            @media only screen and (min-width: 799px) {
+                                display: none;
+                            }
+                        }
+
+                        svg {
+                            color: color(third);
+                        }
+                    }
+                }
+
+              
+
+                .sub-menu-desktop {
+                    position: absolute;
+                    left: 0;
+                    text-align: center;
+                    width: 100%;
+                    top: calc(100% + 5px);
+                    background-color: color(fifth);
+                    box-shadow: 0 2px 5px 0 rgba(0, 0 ,0 ,1);
+                    z-index: -10;
+                    opacity: 0;
+                    transition: opacity .3s ease-in;
+                    @media only screen and (max-width: 799px) {
+                        display: none;
+                    }
+
+                    &.active {
+                        opacity: 1;
+                        padding: .75rem;
+                        z-index: 1;
+
+                        li {
+                            display: block;
+                            margin-bottom: 5px;
+                        }
+
+                        li:last-of-type {
+                            margin-bottom: 0;
+                        }
+                   }
+
+                    li {
+                        background-color: transparent;
+                        transition: all .2s ease-in;
+                        display: none;
+                        &:hover {
+                        
+                            background-color: color(third);
+
+                            span {
+                                color: color(white);
+                            }
+                            
+                        }
+                    }
+
+                   
+                    
+                    span {
+                        color: color(third);
+                    }
+             
+                }
+
+            }
+           
+        }
+
+    }
+
+    .sub-menu-mobile {
+        position: absolute;
+        top: 0;
+        height: 100vh;
+        width: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: color(white);
+        transition: all .3s ease-in;
+        @media only screen and (min-width: 799px) {
+            display: none;
+        }
+
+        &.active {
+            @media only screen and (min-width: 799px) {
+                display: none;
+            }
+            width: 100%;
+            opacity: 1;
+            padding: .75rem;
+            z-index: 1;
+            @include flex(column, nowrap, center, center);
+
+            li {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            li:last-of-type {
+                margin-bottom: 0;
+            }
+       }
+
+        li {
+            background-color: transparent;
+            transition: all .2s ease-in;
+            display: none;
+
+            span {
+                font-size: rem(20);
+                color: color(third);
+                font-weight: 600;
+            }
+
+            &:hover {
+                background-color: (color(sixth));
+            
+                span {
+                    color: color(black);
+                }
+                
+            }
+        }
+    }
+
+   
+    .navbar-close {
+        opacity: 0;
+        height: 0;
+        visibility: hidden;
+        transition: opacity .2s ease-in .2s;
+        @media only screen and (min-width: 799px) {
+            display: none;
+        }
+
+        &.active {
+    
+            display: block;
+            visibility: visible;
+            opacity: 1;
+            height: unset;
+            opacity: 1;
+            position: absolute;
+            cursor: pointer;
+            top: 30px;
+            right: 30px;
+            width: 24px;
+            height: 24px;
+            z-index: 1;
+            background: transparent;
+            color: color(black);
+
+            &:hover {
+                color: color(primary)
+            }
+
+            svg {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+    
+}

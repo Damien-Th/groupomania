@@ -12,11 +12,7 @@ const Comment = connection.define('Comment', {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    image: {
-        type: DataTypes.STRING(120),
-        allowNull: true
-    }
-   
-}, { timestamps: false, paranoid: true} )
+
+}, { timestamps: true, deletedAt: false, paranoid: false} )
 
 module.exports = Comment

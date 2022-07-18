@@ -4,13 +4,26 @@ const func = require('../function');
 
 exports.token = (req, res, next) => {
     const refreshToken = req.cookies['jwtRefresh'];
-    if(refreshToken === null) return res.sendStatus(401)
+    console.log(refreshToken)
+    if(refreshToken === null || refreshToken === undefined) return res.status(401).json({ Message: 'Token Missing in the Cookie' })
     func.verifyToken(refreshToken, req, res)
+};
+
+exports.clear = (req, res, next) => {
+    const token = req.cookies['jwtRefresh'];
+    if(token === null) return res.status(401).json({ Message: 'Token Missing in the Cookie' })
+    const verifToken = ''
+    const setCookie = func.clearCookies(res, verifToken)
+    setCookie.status(201).json({ message: 'Cookies expired'})
 };
 
 // Authentification
 
 exports.signup = (req, res, next) => {
+    const lastname = req.body.lastName.replace(/\s/g, '').toLowerCase();
+    const firstName = req.body.firstName.replace(/\s/g, '').toLowerCase();
+    const slug = firstName + lastname + Math.floor(Math.random() * 9999)
+ 
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
         const user = new User({
@@ -18,7 +31,7 @@ exports.signup = (req, res, next) => {
             password: hash,
             last_name: req.body.lastName,
             first_name: req.body.firstName,
-            // user_img: `${req.protocol}://${req.get('host')}/images/${req.body.filename}`,
+            slug: slug,
         })
         user.save()
         .then(() => res.status(201).json({message: 'Utilisateur créé !'}))
@@ -38,7 +51,7 @@ exports.signin = (req, res, next) => {
             const token = func.createToken(user.id, user.is_admin);
             const refreshToken = func.refreshToken(user.id, user.is_admin);
             const setCookie = func.setCookie(res, refreshToken)
-            setCookie.status(201).json({ message: 'Cookies created', accessToken : token})
+            setCookie.status(201).json({ message: 'Cookies created', accessToken : token, userId: user.id})
         })
         .catch(error => res.status(500).json({ error }));
     })

@@ -1,102 +1,40 @@
-
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { instanceAxios } from '../api/Axios';
 import {ImBin} from 'react-icons/im';
 import {AiFillEdit, AiOutlineSearch} from 'react-icons/ai';
 import jwt_decode from "jwt-decode";
+import { useNavigate } from 'react-router-dom';
+import NavBar from '../components/NavBar';
+import { UserContext,  } from '../context';
+import { Link } from 'react-router-dom';
 
 const Admin = () => {
 
     const [UserData, setUserData] = useState([]);
-    const [AdminData, setAdminData] = useState({});
     const [inputSearch, setInputSearch] = useState("");
+    const navigate = useNavigate();
+
+    const URL_SERVER = process.env.REACT_APP_URL_SERVER;
+    const avatar = URL_SERVER + '/images/avatars/default.png'
+
+    const { CurrentUser } = useContext(UserContext)
 
     useEffect(() => {
-   
-        instanceAxios.get('/api/refresh')
-        .then((res) =>  {
-            const Admin = jwt_decode(res.data.accessToken);
-            instanceAxios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
-            instanceAxios.get(`/api/admin/${Admin.id}`)
-            .then(response => setAdminData(response.data));
-            instanceAxios.get('/api/admin')
-            .then(response => setUserData(response.data));
-        })
-        .catch(() => window.location.href = "/login");
-    
-      }, []);
-
-      console.log(AdminData)
+        instanceAxios.get('/api/user')
+        .then(response => setUserData(response.data));
+    }, []);
 
     const deleteUSer = (userId) => {
-        instanceAxios.delete(`/api/admin/${userId}`)
+        if (!window.confirm("Voulez vous vraimment supprimer cet utilisateur ?")) return;
+        instanceAxios.delete(`/api/user/${userId}`)
         .then(() =>  {
-            instanceAxios.get('/api/admin')
-            .then(response => setUserData(response.data));
-        });
-    };
-
-    const EditUSer = (user_Id, types) => {
-
-        types.forEach(type => {
-            const input_Id = `#${type}_${user_Id}`;
-            const table_input = document.querySelector(`${input_Id}`);
-            const editable = table_input.classList.contains("editable");
-    
-            if(editable) {
-                table_input.classList.remove("editable"); 
-                table_input.readOnly = true;
-                return;
-            }
-    
-            table_input.classList.add("editable");
-            table_input.readOnly = false;
-        });
-    };
-
-
-    const handleEditor = (e, user, type) => {
-
-        if(!e) {
-            // console.log('you are in')
-            const input_Id = `#${type}_${user.id}`;
-            console.log(input_Id, type)
-            let test = document.querySelector('.table-body');
-            console.log(test);
-            const input_parent = test.querySelector(`${input_Id}`);
-            console.log('input 1', input_parent, user)
-            if(input_parent === null) return
-            if(type === 'email') input_parent.value = user.email;
-            if(type === 'password') input_parent.value = user.password;
-            // console.log('input 2', input_parent)
-            return;
-        } 
-
-        let email_req = '';
-        let password_req = '';
-        type === 'email' ? email_req = e.target.value : email_req = user.email;
-        type === 'password' ? password_req = e.target.value : password_req = user.password;
-        
-        instanceAxios({
-            method: "PUT",
-            url: `/api/user/${user.id}`,
-            data: { 
-                email: email_req,
-                password: password_req
-            },
-        })
-        .then(() => {  
-            instanceAxios.get('/api/admin')
+            instanceAxios.get('/api/user')
             .then(response => {
-                setUserData(response.data);
-            })
-        })
-        .catch((err) => {
-            console.log(err);
-            setUserData(UserData);
-        })
-        
+                setUserData(response.data)
+                if (response.data.length === 0) navigate('/logout')
+                if(CurrentUser.id === userId) navigate('/logout')
+            });
+        });
     };
 
     const handleIsAdmin = (e, user) => {
@@ -106,82 +44,72 @@ const Admin = () => {
 
         instanceAxios({
             method: "PUT",
-            url: `/api/admin/${user.id}`,
+            url: `/api/user/active/${user.id}`,
             data: {
                 is_admin: admin_value
             },
         })
         .then(() => {  
-            instanceAxios.get('/api/admin')
+            instanceAxios.get('/api/user')
             .then(response => setUserData(response.data));
         })
 
     }
 
-
-    const searchHandler = (e) => {
-        setInputSearch(e.target.value.toLowerCase())
-    }
-
-    const filteredData = UserData.filter((data) => {
-        // if (inputSearch === '') return data;
-        // if(data.email.toLowerCase().includes(inputSearch)) return data;
-        // return null
-        return data.email.toLowerCase().includes(inputSearch)
-    })
-
     return (
-        <div className='admin-container'>
-            <span className='admin-container__title'>Liste des Utilisateurs</span>
-            <div className="search">
-                <AiOutlineSearch/>
-                <input placeholder='Filtrer par adreses Email' type="search" onChange={searchHandler} />
-            </div>
-            <table className='myTable'>
-                <thead>
-                    <tr>
-                        <th>Utilisateur</th>
-                        <th>Nom complet</th>
-                        <th>Email</th>
-                        <th>Mot de passe</th>
-                        <th>Biographie</th>
-                        <th>Admin</th>
-                    </tr>
-                </thead>
-                <tbody className='table-body'>
-                    {filteredData.map(User => <tr key={'UserData_' + User.id}>
-                        <td key={'UserImg_' + User.id}>{User.user_img}</td>
-                        <td key={'UserFullName_' + User.id}>{User.last_name} {User.first_name}</td>
-                        <td key={'UserEmails_' + User.id}>
-                            <input readOnly className='input-readOnly'
-                            type="Email" id={`email_${User.id}`} name="email" 
-                            onBlur={(e) => handleEditor(e, User, 'email')}/>
-                            {console.log('ok1' + User.id)}
-                            {handleEditor(false, User, 'email')}
-                        </td>
-                        <td key={'UserPassword_' + User.id}>
-                            <form>
-                                <input readOnly className='input-readOnly' autoComplete=""
-                                type="password" id={`password_${User.id}`} name="password"
-                                onBlur={(e) => handleEditor(e, User, 'password')}/>
-                            </form>
-                            {console.log('ok2' + User.id)}
-                            {handleEditor(false, User, 'password')} 
-                        </td>
-                        <td key={'UserBiography_' + User.id}>{User.bio}</td>
-                        <td key={'UserIsAdmins_' + User.id}>
-                            <div className={`switch-btn ${'is_' + User.is_admin}`}>
-                                <label htmlFor={`buttonGroup${User.id}`}></label>
-                                <input onChange={(e) => handleIsAdmin(e, User)} id={`buttonGroup${User.id}`} type="checkbox" value={User.is_admin}/>
-                            </div>
-                        </td> 
-                        <td className='icon-editor' onClick={() => EditUSer(User.id, ['email', 'password'])}><AiFillEdit/></td> 
-                        <td className='icon-remove' onClick={() => deleteUSer(User.id)}><ImBin/></td> 
-                    </tr>
-                    )}
-                </tbody>
-            </table >
-        </div >
+
+        <div className='admin'>
+
+            <NavBar UserData={UserData}/> 
+
+            <main className='container'>
+
+                <div className='admin-container'>
+                    <span className='admin-container__title'>Liste des Utilisateurs</span>
+                    <div className="search">
+                        <AiOutlineSearch/>
+                        <input placeholder='Filtrer par adreses Email' type="search" onChange={(e) => setInputSearch(e.target.value.toLowerCase())} />
+                    </div>
+                    <table className='myTable'>
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th className='mobile'>Nom complet</th>
+                                <th>Email</th>
+                                <th>Admin</th>
+                                <th className='action' >Action</th>
+                            </tr>
+                        </thead>
+                        <tbody className='table-body'>
+                            {UserData.filter((data) => data.email.toLowerCase().includes(inputSearch)).map(
+                                User => <tr key={'UserData_' + User.id}>
+                                <td className='avatar' key={'UserImg_' + User.id}>
+                                    <div className='avatar-wrapper avatar_small'>
+                                        <img alt="avatar" src={avatar}></img>
+                                    </div>
+                                </td>
+                                <td className='mobile' key={'UserFullName_' + User.id}>{User.last_name} {User.first_name}</td>
+                                <td key={'UserEmails_' + User.id}>{User.email}</td>
+                                <td key={'UserIsAdmins_' + User.id}>
+                                    <div className={`switch-btn ${'is_' + User.is_admin}`}>
+                                        <label htmlFor={`buttonGroup${User.id}`}></label>
+                                        <input onChange={(e) => handleIsAdmin(e, User)} id={`buttonGroup${User.id}`} type="checkbox" value={User.is_admin}/>
+                                    </div>
+                                </td> 
+                                <td>
+                                <Link className='icon-editor' to={`/setting/${User.slug}`}>
+                                    <AiFillEdit/>
+                                </Link>
+                                <div className='icon-remove' onClick={() => deleteUSer(User.id)}><ImBin/></div>
+                                </td> 
+                            </tr>
+                            )}
+                        </tbody>
+                    </table >
+                </div >
+            </main>
+        </div>
+        
     );
 };
 
