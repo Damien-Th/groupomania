@@ -2,9 +2,13 @@
 @import "../../common/mixins";
 
 .comment-Container {
+    background-color: color(fifth);
+    margin-top: 18px;
+    border-radius: 5px;
 
     .comment-Content {
-        margin: 20px 0;
+        padding: 20px 8px;
+        padding-bottom: 0;
 
         .comment-wrapper {
             @include flex(row, nowrap, initial, center);
@@ -21,6 +25,11 @@
             margin: 0 auto;
             margin-top: 5px;
         }
+    }
+
+    .handle-wrapper {
+        display: flex;
+        gap: 18px;
     }
 
 }

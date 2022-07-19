@@ -29,7 +29,7 @@ const User = connection.define('User', {
         type: DataTypes.STRING(50),
         allowNull: false,
     },
-    picture: {
+    image: {
         type: DataTypes.STRING(150),
         allowNull: false,
         defaultValue: 'default.jpg'

@@ -3,21 +3,10 @@ const User = require('../models/User');
 const func = require('../function');
 
 exports.token = (req, res, next) => {
-    const refreshToken = req.cookies['jwtRefresh'];
-    console.log(refreshToken)
-    if(refreshToken === null || refreshToken === undefined) return res.status(401).json({ Message: 'Token Missing in the Cookie' })
-    func.verifyToken(refreshToken, req, res)
+    const Token = req.cookies['jwt'];
+    if(Token === null) return res.sendStatus(401)
+    func.verifCookie(Token, req, res)
 };
-
-exports.clear = (req, res, next) => {
-    const token = req.cookies['jwtRefresh'];
-    if(token === null) return res.status(401).json({ Message: 'Token Missing in the Cookie' })
-    const verifToken = ''
-    const setCookie = func.clearCookies(res, verifToken)
-    setCookie.status(201).json({ message: 'Cookies expired'})
-};
-
-// Authentification
 
 exports.signup = (req, res, next) => {
     const lastname = req.body.lastName.replace(/\s/g, '').toLowerCase();
@@ -38,7 +27,6 @@ exports.signup = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
-
 };
 
 exports.signin = (req, res, next) => {
@@ -49,9 +37,8 @@ exports.signin = (req, res, next) => {
         .then(valid => {
             if(!valid) return res.status(401).json({error: 'Mot de passe incorrect'});
             const token = func.createToken(user.id, user.is_admin);
-            const refreshToken = func.refreshToken(user.id, user.is_admin);
-            const setCookie = func.setCookie(res, refreshToken)
-            setCookie.status(201).json({ message: 'Cookies created', accessToken : token, userId: user.id})
+            const setCookie = func.setCookie(res, token)
+            setCookie.status(201).json({ message: 'Cookies created', accessToken : token})
         })
         .catch(error => res.status(500).json({ error }));
     })
@@ -59,5 +46,9 @@ exports.signin = (req, res, next) => {
 }
 
 exports.signout = (req, res, next) => {
-    res.clearCookie('jwt').status(200).json({ message: 'Cookie removed' }).end();
+    const token = req.cookies['jwt'];
+    if(token === null) return res.status(401).json({ Message: 'Token Missing in the Cookie' })
+    const verifToken = ''
+    const setCookie = func.clearCookies(res, verifToken)
+    setCookie.status(201).json({ message: 'Cookies expired'})
 }

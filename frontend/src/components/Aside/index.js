@@ -2,24 +2,30 @@ import React, {useState, useEffect, useContext} from 'react';
 import { Link } from 'react-router-dom';
 import { instanceAxios } from '../../api/Axios';
 import { UserContext} from '../../context';
+import UserInscrit from '../GetData/UserInscrit';
 
 const Aside = (props) => {
 
+    const { CurrentUser, setHasValidToken } = useContext(UserContext)
+
+
     const URL_SERVER = process.env.REACT_APP_URL_SERVER;
     const background = URL_SERVER + '/images/background/default.jpg'
-    const avatar = URL_SERVER + '/images/avatars/default.png'
+
+    let avatar
+    CurrentUser.image === 'default.jpg' ? avatar = URL_SERVER + '/images/avatars/default.png' : avatar = URL_SERVER + `/images/user_${CurrentUser.id}/avatar/${CurrentUser.image}`
+
+
     const home = props.home
     const UserData = props.UserData
 
     const [lastUsers, setLastUsers] = useState([]);
 
-    const { CurrentUser } = useContext(UserContext)
-
-
     useEffect(() => {
 
         instanceAxios.get('/api/user/last')
-        .then(res => setLastUsers(res.data));
+        .then(res => setLastUsers(res.data))
+        .catch(res => setHasValidToken(false));
 
     }, [])
 
@@ -43,13 +49,7 @@ const Aside = (props) => {
             <div className='aside-userList'>
                 <span className='aside-title wrapper'>Les derniers inscrits</span>
                 {lastUsers.map((lastUser, index) => <div className='item-list' key={'lastUsers ' + index}>
-                    
-                    <Link className="profil_link wrapper" to={`/profil/${lastUser.slug}`}>
-                        <div className='avatar-wrapper'>
-                            <img alt="avatar" src={avatar}/>
-                        </div>
-                        <p>{lastUser.first_name} {lastUser.last_name}</p>
-                    </Link>
+                    <UserInscrit lastUser={lastUser}/>
                 </div>)}
             </div>
         </div>

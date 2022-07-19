@@ -9,13 +9,13 @@ const Logout  = () => {
 
     useEffect(() => {
 
-        instanceAxios.get('/api/auth/clear')
+        instanceAxios.get('/api/auth/signout')
         .then(res => {
             setHasValidToken(false)
         })
         .catch((err) => console.log(err));
 
-    }, [setHasValidToken]);
+    }, []);
 
 };
 

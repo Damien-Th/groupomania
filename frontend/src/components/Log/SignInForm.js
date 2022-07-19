@@ -13,7 +13,7 @@ const SignInForm = () => {
     const submitMsg = useRef();
 
     const navigate = useNavigate();
-    const { setCurrentUser, setHasValidToken } = useContext(UserContext)
+    const { setHasValidToken } = useContext(UserContext)
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -26,18 +26,7 @@ const SignInForm = () => {
                 password,
             },
         })
-        .then((res) => {
-            instanceAxios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
-            axios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
-
-            setHasValidToken(true)
-
-            instanceAxios.get(`/api/user/${res.data.userId}`)
-            .then(res => {
-                setCurrentUser(res.data)
-                navigate('/')
-            });
-        })
+        .then(() => setHasValidToken(true))
         .catch((err) => submitMsg.current.textContent = err.response.data.error)
     };
 

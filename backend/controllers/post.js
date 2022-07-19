@@ -62,8 +62,6 @@ exports.modifyPostImage = (req, res, next) => {
   .then(post => {
     let imageName;
     req.file === undefined ? imageName = req.body.image : imageName = req.file.filename;
-  
-    post.user_id = req.body.user_id;
     post.image = imageName;
      post.save()
      .then(() => res.status(201).json({

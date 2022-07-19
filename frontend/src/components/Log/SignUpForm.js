@@ -70,18 +70,7 @@ const SignUpForm = () => {
                     password,
                 },
             })
-            .then((res) => {
-                instanceAxios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
-                axios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
-
-                setHasValidToken(true)
-
-                instanceAxios.get(`/api/user/${res.data.userId}`)
-                .then(res => {
-                    setCurrentUser(res.data)
-                    navigate('/')
-                });
-            })
+            .then(() => setHasValidToken(true))
             .catch((err) => submitMsg.current.textContent = err.response.data.error)
         })
         .catch((err) => {

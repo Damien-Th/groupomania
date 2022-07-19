@@ -8,18 +8,17 @@ import {ErrorPwd} from './../components/ErrorMessage';
 
 const Setting  = () => {
 
- 
-
-    const { CurrentUser, setHasValidToken } = useContext(UserContext)
+    const { CurrentUser, setCurrentUser, setHasValidToken } = useContext(UserContext)
 
     const [UserData, setUserData] = useState({});
     const [isValid, setIsValid] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [verifPassword, setVerifPassword] = useState('');
     const [picture, setPicture] = useState('');
+    const [newPicture, setNewPicture] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [biography, setBiography] = useState('');
+    const [biography, setBiography] = useState(UserData.biography);
 
 
     const pwdError = useRef();
@@ -81,13 +80,11 @@ const Setting  = () => {
                 return
             } 
 
-            console.log(result[0])
-
             setIsValid(true) 
 
             instanceAxios.get(`/api/user/${result[0].id}`)
             .then(res => {
-                console.log(CurrentUser.slug, res.data.slug)
+            
                 if(CurrentUser.slug !== res.data.slug) {
                     navigate('/')
                     return
@@ -107,7 +104,6 @@ const Setting  = () => {
 
         e.preventDefault();
 
-
         instanceAxios({
             method: "PUT",
             url: `/api/user/${UserData.id}`,
@@ -118,19 +114,26 @@ const Setting  = () => {
                 last_name: lastName,
                 biography: biography,
             },
-        }).then(res =>  { console.log('sucess')})
+        }).then(res =>  { 
+            instanceAxios.get(`/api/user/${UserData.id}`)
+            .then(res => {
+                setCurrentUser(res.data)
+            });
+        })
         .catch((err) => console.log(err));
 
-        // const formData = new FormData()
-        // formData.append("type", 'avatar')
-        // formData.append("user_id", UserData.id)
-        // formData.append("picutre", picture)
-
-        // axios.put(`/api/user`, formData)
-        // .then((res) =>  {
-        //     console.log('sucesss')
-        // })
-        // .catch((err) => console.log(err));
+        if(newPicture !== '') {
+            const formData = new FormData()
+            formData.append("type", 'avatar')
+            formData.append("user_id", UserData.id)
+            formData.append("image", newPicture)
+    
+            axios.put(`/api/user/avatar/${UserData.id}`, formData)
+            .then((res) =>  {
+                setNewPicture('')
+            })
+            .catch((err) => console.log(err));
+        }
 
     }
 
@@ -150,7 +153,7 @@ const Setting  = () => {
     const deleteAccount = (userId) => {
         instanceAxios.delete(`/api/user/${userId}`)
         .then(() => {
-            instanceAxios.get('/api/auth/clear')
+            instanceAxios.get('/api/auth/signout')
             .then(res => {
                 setHasValidToken(false)
             })
@@ -174,12 +177,12 @@ const Setting  = () => {
                     <button onClick={handleAccordion} className="accordion active">Profil</button>
                     <div className="panel">
                         <span>Modifier mon profil</span>
-                        <form onChange={handleUser} action="" method="POST" className="form-change-profil">
+                        <form onSubmit={handleUser} action="" method="POST" className="form-change-profil">
                             <div className="image-form-wrapper">
                                 <div className='avatar-wrapper avatar_medium'>
                                     <img alt="avatar" src={avatar}></img>
                                 </div>
-                                <input accept="image/png, image/gif, image/jpeg, image/jpg" type="file" />
+                                <input onChange={(e) => setNewPicture(e.target.files[0])}  accept="image/png, image/gif, image/jpeg, image/jpg" type="file" />
                             </div>
                             <div className="profil-wrapper">
                                 <div className="firstname-wrapper border">

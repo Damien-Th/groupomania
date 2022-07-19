@@ -6,10 +6,9 @@ import Like from '../../components/Button/Like';
 import { formatDistance, subDays, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { UserContext} from '../../context';
+import Comment from '../../components/GetData/Comment';
 import { FaRegCommentDots } from 'react-icons/fa';
 
-const URL_SERVER = process.env.REACT_APP_URL_SERVER;
-const avatar = URL_SERVER + '/images/avatars/default.png'
 
 const PostContent  = (props) => {
 
@@ -34,6 +33,10 @@ const PostContent  = (props) => {
     const countcomment = useRef();
 
     const URL_SERVER = process.env.REACT_APP_URL_SERVER;
+    let avatar
+    let avatarUser
+    CurrentUser.image === 'default.jpg' ? avatar = URL_SERVER + '/images/avatars/default.png' : avatar = URL_SERVER + `/images/user_${CurrentUser.id}/avatar/${CurrentUser.image}`
+    PostUser.User.image === 'default.jpg' ? avatarUser = URL_SERVER + '/images/avatars/default.png' : avatarUser = URL_SERVER + `/images/user_${PostUser.User.id}/avatar/${PostUser.User.image}`
     const postImage = URL_SERVER + `/images/user_${PostUser.user_id}/post/${image}`
 
     const handleModal = () => setDisplayModal(!displayModal)
@@ -45,19 +48,19 @@ const PostContent  = (props) => {
     const handlePostInput = (e) => {
         e.preventDefault();
 
-        console.log('you are here')
-
         const data = {
             post_id: PostUser.id,
             user_id: CurrentUser.id,
             content: content
         }
+
+        const User = CurrentUser
      
         instanceAxios.post('/api/comment', data)
         .then((res) =>  {
             countComment(PostUser.id)
             setContent('')
-            const newObj = {CurrentUser, ...res.data.comment}
+            const newObj = {User, ...res.data.comment}
             setUserComments(UserComments => [...UserComments, newObj]) 
         })
         .catch((err) => console.log(err));
@@ -79,7 +82,6 @@ const PostContent  = (props) => {
     }
 
     const countComment = (postId) => {
-        console.log('you are here 2', ' ', postId)
         instanceAxios.get(`/api/comment/post/${postId}`)
         .then(response => {
             if(countcomment.current === undefined || countcomment.current === null) return
@@ -133,9 +135,8 @@ const PostContent  = (props) => {
     const submitImage = (e) => {
         e.preventDefault();
 
-
         const formData = new FormData()
-        formData.append("user_id", PostUser.id)
+        formData.append("user_id", PostUser.user_id)
         formData.append("type", 'post')
         formData.append("image", newImage)
 
@@ -161,10 +162,10 @@ const PostContent  = (props) => {
                                     
                 <div className='post-info'>
                     <div className='avatar-wrapper avatar_big'>
-                        <img alt="avatar" src={avatar}></img>
+                        <img alt="avatar" src={avatarUser}></img>
                     </div>
                     <div className='info-wrapper'>
-                        {PostUser.last_name} {PostUser.first_name}
+                        {PostUser.User.first_name} {PostUser.User.last_name}
                         <p className='info-time' >{formatDate(PostUser.createdAt)}</p>
                     </div>
                     <div className='icon-modal' ref={icon} onClick={handleModal}><BiDotsVerticalRounded/>
@@ -225,13 +226,7 @@ const PostContent  = (props) => {
             <div className='comment-Container'>
                 {UserComments.filter((commentUser) => commentUser.post_id === PostUser.id).map(comments => 
                     <div className='comment-Content' key={'Comment ' + comments.id}>
-                        <div className='comment-wrapper'>
-                            <div className='avatar-wrapper avatar_medium'>
-                                <img alt="avatar" src={avatar}></img>
-                            </div>
-                            <p>{comments.content}</p>
-                        </div>
-                        <Like Content={comments} Type='comment'/>
+                        < Comment UserComments={UserComments} setUserComments={setUserComments}  comments={comments}/>
                     </div>
                 )}
             </div>  

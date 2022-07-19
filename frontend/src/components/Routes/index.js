@@ -8,32 +8,29 @@ import Logout  from '../../pages/Logout';
 import Setting  from '../../pages/Setting';
 import { UserContext } from '../../context';
 import jwt_decode from "jwt-decode";
-import { instanceAxios } from '../../api/Axios';
+import axios, { instanceAxios } from '../../api/Axios';
 
 const MyRoutes = () => {
 
-    const [CurrentUser, setCurrentUser] = useState(null);
+    const [CurrentUser, setCurrentUser] = useState({});
     const [hasValidToken, setHasValidToken] = useState(null);
 
-    useEffect(() => {
-
-        if(window.location.pathname !== '/login' && window.location.pathname !== '/login/') {
-            instanceAxios.get('/api/auth/refresh')
+    const init = () => {
+        
+        instanceAxios.get('/api/auth/token')
+        .then(res => {
+            const UserId = jwt_decode(res.data.accessToken).id
+            instanceAxios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
+            axios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
+            instanceAxios.get(`/api/user/${UserId}`)
             .then(res => {
-                const UserId = jwt_decode(res.data.accessToken).id
-                instanceAxios.defaults.headers.common['authorization'] = `Bearer ${res.data.accessToken}`
-                instanceAxios.get(`/api/user/${UserId}`)
-                .then(res => {
-                    setHasValidToken(true)
-                    setCurrentUser(res.data)
-                })
+                setCurrentUser(res.data)
+                if(!hasValidToken) setHasValidToken(true);
             })
-            .catch(() => setHasValidToken(false));
-        }else {
-            setHasValidToken(false)
-        }
+        }).catch(() => setHasValidToken(false));
+    }
 
-    }, [setHasValidToken, setCurrentUser]);
+    useEffect(() => { init() }, [hasValidToken]);
 
     if(hasValidToken === null) { return (<div className='loader'></div>) }
 

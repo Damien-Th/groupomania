@@ -53,7 +53,7 @@ exports.modifyComment = (req, res, next) => {
     .then(comment => {
        comment.content = req.body.content;
        comment.save()
-       .then(() => res.status(201).json({message: 'Comment modifié !'}))
+       .then(() => res.status(201).json({message: 'Comment modifié !', comment}))
        .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));

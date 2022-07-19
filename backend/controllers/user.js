@@ -8,33 +8,26 @@ const path = require('path');
 
 exports.getAllUsers = (req, res, next) => {
     User.findAll()
-    .then(users => {
-       res.send(users);
-    })
+    .then(users => res.send(users))
     .catch(error => res.status(500).json({ error }));
 };
 
 exports.getAllUsersSlug = (req, res, next) => {
     User.findAll({attributes: ['slug', 'id']})
-    .then(users => {
-       res.send(users);
-    })
+    .then(users => res.send(users))
     .catch(error => res.status(500).json({ error }));
 };
 
 exports.getLastUser = (req, res, next) => {
-    User.findAll({limit: 5, attributes: {exclude: ['password', 'id', 'is_admin']}, order: [ [ 'id', 'DESC' ]]})
-    .then(users => {
-       res.send(users);
-    })
+    console.log(req.auth)
+    User.findAll({limit: 5, attributes: {exclude: ['password', 'is_admin']}, order: [ [ 'id', 'DESC' ]]})
+    .then(users => res.send(users))
     .catch(error => res.status(500).json({ error }));
 };
 
 exports.getOneUser = (req, res, next) => {
     User.findOne({where: {id: req.params.id}, attributes: {exclude: ['password']}})
-    .then(user => {
-       res.send(user);
-    })
+    .then(user => res.send(user))
     .catch(error => res.status(500).json({ error }));
 };
 
@@ -42,24 +35,32 @@ exports.modifyUser = (req, res, next) => {
 
     User.findOne({where: {id: req.params.id}})
     .then(user => {
-       bcrypt.hash(req.body.password, 10)
-       .then((hash) => {
-        user.first_name = req.body.first_name
-        user.last_name = req.body.last_name
-        user.biography = req.body.biography
-        user.email = req.body.email;
-        user.password = hash;
-        user.save()
-        .then(() => res.status(201).json({message: 'Utilisateur modifié !'}))
-        .catch(error => res.status(400).json({ error }));
-        })
+
+        bcrypt.hash(req.body.password, 10)
+        .then((hash) => {
+            user.first_name = req.body.first_name
+            user.last_name = req.body.last_name
+            user.biography = req.body.biography
+            user.email = req.body.email;
+            user.password = hash;
+            user.save()
+            .then(() => res.status(201).json({message: 'Utilisateur modifié !'}))
+            .catch(error => res.status(400).json({ error }));
+            })
     })
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.modifyUserImage = (req, res, next) => {
+exports.modifyUserAvatar = (req, res, next) => {
 
-  
+    User.findOne({where: {id: req.params.id}})
+    .then(user => {
+        user.image = req.file.filename;
+        user.save().then(() => res.status(201).json({message: 'Avatar modifié !'}))
+        .catch(error => res.status(400).json({ error }));       
+    })
+    .catch(error => res.status(500).json({ error }));
+   
 };
 
 exports.makeAdmin = (req, res, next) => {

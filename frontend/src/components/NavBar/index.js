@@ -13,6 +13,7 @@ const NavBar = () => {
     const [activeMobile, setActiveMobile] = useState(false);
     const menu = useRef()
 
+
     const { CurrentUser } = useContext(UserContext)
 
     const handleMenu = () => setActive(active => !active)
@@ -23,7 +24,11 @@ const NavBar = () => {
 
 
     const URL_SERVER = process.env.REACT_APP_URL_SERVER;
-    const avatar = URL_SERVER + '/images/avatars/default.png'
+    let avatar
+
+    CurrentUser.image === 'default.jpg' ? avatar = URL_SERVER + '/images/avatars/default.png' : avatar = URL_SERVER + `/images/user_${CurrentUser.id}/avatar/${CurrentUser.image}`
+
+    
 
     return (
         <header className="banner">

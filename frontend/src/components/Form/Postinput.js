@@ -15,9 +15,9 @@ const Postinput  = (props) => {
 
     const { CurrentUser } = useContext(UserContext)
 
-
+    let avatar
     const URL_SERVER = process.env.REACT_APP_URL_SERVER;
-    const avatar = URL_SERVER + '/images/avatars/default.png'
+    CurrentUser.image === 'default.jpg' ? avatar = URL_SERVER + '/images/avatars/default.png' : avatar = URL_SERVER + `/images/user_${CurrentUser.id}/avatar/${CurrentUser.image}`
 
     const imageUploader = useRef()
 
@@ -43,10 +43,12 @@ const Postinput  = (props) => {
         } 
 
         const formData = new FormData()
-        formData.append('content', content)
+        formData.append('content', content.toString())
         formData.append("user_id", CurrentUser.id)
         formData.append("type", type)
         formData.append("image", image)
+
+        const User = CurrentUser;
      
         axios.post('/api/post', formData)
         .then((res) =>  {
@@ -54,7 +56,7 @@ const Postinput  = (props) => {
             setContent('');
             setPreview(null)
             setImage('')
-            const newObj = {CurrentUser, ...res.data.post}
+            const newObj = {User, ...res.data.post}
             setPostData(PostData => [newObj, ...PostData])
         })
         .catch((err) => console.log(err));
@@ -87,7 +89,7 @@ const Postinput  = (props) => {
             </div>
             
             {image &&<div className='post_input__preview'>
-                <img src={preview}/>
+                <img alt="preview" src={preview}/>
             </div>}
 
             <div className='btn-wrapper'>
