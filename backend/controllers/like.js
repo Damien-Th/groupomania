@@ -23,16 +23,6 @@ exports.handleLike = (req, res, next) => {
   });
 };
 
-exports.deleteLike = (req, res, next) => {
-    Like.findOne({where: {id: req.params.id}})
-    .then(like => {
-       like.destroy()
-       .then(() => res.status(201).json({message: 'Like supprimé !'}))
-       .catch(error => res.status(400).json({ error }));
-    })
-    .catch(error => res.status(500).json({ error }));
-};
-
 exports.postLike = (req, res, next) => {
   Like.findAndCountAll({where: {type_id: req.params.id, type: 'Post'}})
   .then((count) => res.status(201).json({count}))
@@ -44,4 +34,3 @@ exports.commentLike = (req, res, next) => {
   .then((count) => res.status(201).json({count}))
   .catch(error => res.status(500).json({ error }));
 };
-
