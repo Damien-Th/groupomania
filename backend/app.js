@@ -20,14 +20,6 @@ func.hasMany(User, Comment, 'user_id', 'CASCADE')
 func.hasMany(Post, Comment, 'post_id', 'CASCADE')
 func.belongsTo(Like, User, 'user_id')
 
-
-try {
-    sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-} catch (error) {
-    console.error('Unable to connect to the database:', error);
-}
-
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');

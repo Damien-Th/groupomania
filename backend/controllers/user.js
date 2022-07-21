@@ -4,8 +4,6 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
 
-// CRUD
-
 exports.getAllUsers = (req, res, next) => {
     User.findAll()
     .then(users => res.send(users))
@@ -19,7 +17,6 @@ exports.getAllUsersSlug = (req, res, next) => {
 };
 
 exports.getLastUser = (req, res, next) => {
-    console.log(req.auth)
     User.findAll({limit: 5, attributes: {exclude: ['password', 'is_admin']}, order: [ [ 'id', 'DESC' ]]})
     .then(users => res.send(users))
     .catch(error => res.status(500).json({ error }));
@@ -36,17 +33,25 @@ exports.modifyUser = (req, res, next) => {
     User.findOne({where: {id: req.params.id}})
     .then(user => {
 
+       if(req.body.password) {
         bcrypt.hash(req.body.password, 10)
         .then((hash) => {
-            user.first_name = req.body.first_name
-            user.last_name = req.body.last_name
-            user.biography = req.body.biography
-            user.email = req.body.email;
             user.password = hash;
             user.save()
             .then(() => res.status(201).json({message: 'Utilisateur modifié !'}))
             .catch(error => res.status(400).json({ error }));
-            })
+        })
+       }
+       if(!req.body.password) {
+        user.first_name = req.body.first_name
+        user.last_name = req.body.last_name
+        user.biography = req.body.biography
+        user.save()
+        .then(() => res.status(201).json({message: 'Utilisateur modifié !'}))
+        .catch(error => res.status(400).json({ error }));
+       }
+
+     
     })
     .catch(error => res.status(500).json({ error }));
 };

@@ -15,8 +15,8 @@ const MyRoutes = () => {
     const [CurrentUser, setCurrentUser] = useState({});
     const [hasValidToken, setHasValidToken] = useState(null);
 
-    const init = () => {
-        
+    useEffect(() => { 
+
         instanceAxios.get('/api/auth/token')
         .then(res => {
             const UserId = jwt_decode(res.data.accessToken).id
@@ -26,11 +26,11 @@ const MyRoutes = () => {
             .then(res => {
                 setCurrentUser(res.data)
                 if(!hasValidToken) setHasValidToken(true);
+                console.log()
             })
         }).catch(() => setHasValidToken(false));
-    }
 
-    useEffect(() => { init() }, [hasValidToken]);
+     }, [hasValidToken]);
 
     if(hasValidToken === null) { return (<div className='loader'></div>) }
 
@@ -40,7 +40,7 @@ const MyRoutes = () => {
                 <Routes>
                     {<Route path="/" element={hasValidToken ? <Home/> : <Navigate replace to="/login" />} />}
                     {<Route path="/logout" element={hasValidToken ? <Logout/> : <Navigate replace to="/login" />} />}
-                    {<Route path="/admin" element={hasValidToken ? <Admin/> : <Navigate replace to="/login" />} />}
+                    {<Route path="/admin" element={hasValidToken && CurrentUser.is_admin === true ? <Admin/> : <Navigate replace to="/login" />} />}
                     {<Route path="/profil/*" element={hasValidToken ? <Profil/> : <Navigate replace to="/login" />} />}
                     {<Route path="/setting/*" element={hasValidToken ? <Setting/> : <Navigate replace to="/login" /> } />}
                     {<Route path="/login" element={!hasValidToken ? <Login/> : <Navigate replace to="/" />} />}

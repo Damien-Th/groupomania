@@ -1,6 +1,7 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
 const func  = require('../function');
+fs = require('fs');
 
 exports.createPost = (req, res, next) => {
 
@@ -76,6 +77,14 @@ exports.modifyPostImage = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     Post.findOne({where: {id: req.params.id}})
     .then(post => {
+      if(post.image) {
+        const imagePath = `images/user_${post.user_id}/post/${post.image}`
+        if(fs.existsSync(imagePath)) {
+          fs.unlink(imagePath, (err) => {
+            if (err) {console.error(err)}
+          })
+        } 
+      }
        post.destroy()
        .then(() => res.status(201).json({message: 'Post supprimé !'}))
        .catch(error => res.status(400).json({ error }));

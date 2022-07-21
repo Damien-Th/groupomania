@@ -20,9 +20,10 @@ const Setting  = () => {
     const [lastName, setLastName] = useState('');
     const [biography, setBiography] = useState(UserData.biography);
 
-
     const pwdError = useRef();
-
+    const pwdSuccess = useRef();
+    const modifError = useRef();
+    const modifSuccess = useRef();
 
     const navigate = useNavigate();
 
@@ -56,10 +57,15 @@ const Setting  = () => {
             method: "PUT",
             url: `/api/user/${UserData.id}`,
             data: {
-                email: UserData.email,
-                password: newPassword
+                password: newPassword,
             },
-        }).then(res =>  { console.log('sucess')})
+        }).then(res =>  { 
+            pwdSuccess.current.textContent = 'Les modifications ont été effectuées !';
+            setTimeout(() => {
+                pwdSuccess.current.textContent = '';
+              }, "3500")
+
+        })
         .catch((err) => console.log(err));
     }
 
@@ -75,7 +81,7 @@ const Setting  = () => {
 
             const result = slugIsValid(res.data, slug)
 
-            if(result.length === 0) {
+            if(result.length === 0 && CurrentUser.is_admin === false) {
                 navigate('/')
                 return
             } 
@@ -85,20 +91,20 @@ const Setting  = () => {
             instanceAxios.get(`/api/user/${result[0].id}`)
             .then(res => {
             
-                if(CurrentUser.slug !== res.data.slug) {
+                if(CurrentUser.slug !== res.data.slug && CurrentUser.is_admin === false) {
                     navigate('/')
                     return
                 } 
                 setUserData(res.data)
-                setLastName(UserData.last_name)
-                setFirstName(UserData.first_name)
-                setBiography(UserData.biography)
+                setLastName(res.data.last_name)
+                setFirstName(res.data.first_name)
+                setBiography(res.data.biography)
                 setPicture(picture)
             })
 
         })
           
-    }, [navigate, UserData.slug]);
+    }, [slug]);
 
     const handleUser = (e) => {
 
@@ -108,8 +114,6 @@ const Setting  = () => {
             method: "PUT",
             url: `/api/user/${UserData.id}`,
             data: {
-                email: UserData.email,
-                password: newPassword,
                 first_name: firstName,
                 last_name: lastName,
                 biography: biography,
@@ -118,6 +122,11 @@ const Setting  = () => {
             instanceAxios.get(`/api/user/${UserData.id}`)
             .then(res => {
                 setCurrentUser(res.data)
+                modifSuccess.current.textContent = 'Les modifications ont été effectuées !';
+                setTimeout(() => {
+                    modifSuccess.current.textContent = '';
+                  }, "3500")
+                
             });
         })
         .catch((err) => console.log(err));
@@ -131,6 +140,10 @@ const Setting  = () => {
             axios.put(`/api/user/avatar/${UserData.id}`, formData)
             .then((res) =>  {
                 setNewPicture('')
+                modifSuccess.current.textContent = 'Les modifications ont été effectuées !';
+                setTimeout(() => {
+                    modifSuccess.current.textContent = '';
+                  }, "3500")
             })
             .catch((err) => console.log(err));
         }
@@ -202,6 +215,8 @@ const Setting  = () => {
                             <div className="btn-submit btn-wrapper">
                                 <input onClick={handleUser} type="submit" value="Modifer"/>
                             </div>
+                            <div className="error-msg" ref={modifError}></div>
+                            <div className="sucess-msg" ref={modifSuccess}></div>
                         </form>
                     </div>
 
@@ -222,6 +237,7 @@ const Setting  = () => {
                             </div>
                         </form>
                         <div className="error-msg" ref={pwdError}></div>
+                        <div className="sucess-msg" ref={pwdSuccess}></div>
                     </div>
 
                     <button onClick={handleAccordion} className="accordion">Compte</button>

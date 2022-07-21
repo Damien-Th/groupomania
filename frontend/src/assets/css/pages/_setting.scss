@@ -29,6 +29,14 @@
                 width: 100%;
             }
 
+            .form-change-password {
+                .newPwd-wrapper, .verifNewPwd-wrapper {
+                    input {
+                        width: 100%;
+                    }
+                }
+            }
+
             .accordion-container {
 
                 .image-form-wrapper {

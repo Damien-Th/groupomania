@@ -1,16 +1,16 @@
 import React, {useState, useContext, useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios, { instanceAxios } from '../../api/Axios'
+import { instanceAxios } from '../../api/Axios'
 import PaswordInput from './../Form/PasswordInput'
 import { FaUserAlt } from 'react-icons/fa';
 import { MdDriveFileRenameOutline } from 'react-icons/md';
 import { UserContext} from '../../context';
 import {ErrorEmail, ErrorPwd, ErrorName} from './../ErrorMessage';
 
-
-
 const SignUpForm = () => {
+
     const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [lastName, setLastName] = useState('');
@@ -22,7 +22,7 @@ const SignUpForm = () => {
     const firstNameMsg = useRef();
     const submitMsg = useRef();
 
-    const { setCurrentUser, setHasValidToken } = useContext(UserContext)
+    const { setHasValidToken } = useContext(UserContext)
 
 
     const formValidator = () => {
@@ -70,8 +70,15 @@ const SignUpForm = () => {
                     password,
                 },
             })
-            .then(() => setHasValidToken(true))
-            .catch((err) => submitMsg.current.textContent = err.response.data.error)
+            .then(() => {
+                setHasValidToken(true)
+                navigate('/')
+            })
+            .catch((err) => {
+                let error = err.response.data.error
+                if(err.response.status === 429) error = ' Trop de tentatives'
+                submitMsg.current.textContent = error
+            })
         })
         .catch((err) => {
             let message = err.response.data.error.errors[0].message;

@@ -1,5 +1,5 @@
 import React, {useState, useContext, useRef} from 'react';
-import axios, { instanceAxios } from '../../api/Axios'
+import { instanceAxios } from '../../api/Axios'
 import { useNavigate } from 'react-router-dom';
 import PaswordInput from './../Form/PasswordInput'
 import { FaUserAlt } from 'react-icons/fa';
@@ -18,6 +18,11 @@ const SignInForm = () => {
     const handleLogin = (e) => {
         e.preventDefault();
 
+        if(password === '') {
+            submitMsg.current.textContent = 'Veuillez entrer un mot de passe valide'
+            return
+        }
+
         instanceAxios({
             method: "POST",
             url: "/api/auth/signin",
@@ -26,8 +31,15 @@ const SignInForm = () => {
                 password,
             },
         })
-        .then(() => setHasValidToken(true))
-        .catch((err) => submitMsg.current.textContent = err.response.data.error)
+        .then(() => {
+            setHasValidToken(true)
+            navigate('/')
+        })
+        .catch((err) => {
+            let error = err.response.data.error
+            if(err.response.status === 429) error = ' Trop de tentatives'
+            submitMsg.current.textContent = error
+        } )
     };
 
     return (
