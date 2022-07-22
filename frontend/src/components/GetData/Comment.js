@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import Like from '../../components/Button/Like';
 import { UserContext} from '../../context';
 import { instanceAxios } from '../../api/Axios';
+import { FaRegTired } from 'react-icons/fa';
 
 const Comment = (props) => {
 
@@ -26,6 +27,10 @@ const Comment = (props) => {
     const handleComment = (e) => {
         e.preventDefault();
 
+        if(CurrentUser.id !== comments.user_id) {
+            if(CurrentUser.is_admin === false) return;
+        }
+
         const data = {
             content: content
         }
@@ -42,8 +47,13 @@ const Comment = (props) => {
 
     const removeComment = (commentId) => {
 
+        if(CurrentUser.id !== comments.user_id) {
+            if(CurrentUser.is_admin === false) return;
+        }
+
         if (!window.confirm("Voulez vous vraimment supprimer ce commentaire ?")) return;
 
+   
         instanceAxios.delete(`/api/comment/${commentId}`)
         .then(() => {
             const arr = UserComments.filter((item) => item !== comments);

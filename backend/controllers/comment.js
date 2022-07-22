@@ -51,6 +51,8 @@ exports.getUserComments = (req, res, next) => {
 exports.modifyComment = (req, res, next) => {
     Comment.findOne({where: {id: req.params.id}})
     .then(comment => {
+    if(comment.user_id !== req.auth.userId) if(req.auth.isAdmin === false) return
+
        comment.content = req.body.content;
        comment.save()
        .then(() => res.status(201).json({message: 'Comment modifié !', comment}))
@@ -62,6 +64,8 @@ exports.modifyComment = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
     Comment.findOne({where: {id: req.params.id}})
     .then(comment => {
+    if(comment.user_id !== req.auth.userId) if(req.auth.isAdmin === false) return
+
        comment.destroy()
        .then(() => res.status(201).json({message: 'Comment supprimé !'}))
        .catch(error => res.status(400).json({ error }));

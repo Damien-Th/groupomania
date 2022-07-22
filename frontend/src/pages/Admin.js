@@ -26,6 +26,11 @@ const Admin = () => {
     }, []);
 
     const deleteUSer = (userId) => {
+        
+        if(CurrentUser.id !== userId) {
+            if(CurrentUser.is_admin === false) return;
+        }
+
         if (!window.confirm("Voulez vous vraimment supprimer cet utilisateur ?")) return;
         instanceAxios.delete(`/api/user/${userId}`)
         .then(() =>  {
@@ -39,6 +44,10 @@ const Admin = () => {
     };
 
     const handleIsAdmin = (e, user) => {
+
+        if(CurrentUser.id !== user.id) {
+            if(CurrentUser.is_admin === false) return;
+        }
 
         let admin_value = e.target.value;
         admin_value === 'true' ? admin_value = false : admin_value = true;

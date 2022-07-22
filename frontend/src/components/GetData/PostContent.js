@@ -71,6 +71,10 @@ const PostContent  = (props) => {
 
         const postId = post.id
 
+        if(CurrentUser.id !== post.user_id) {
+            if(CurrentUser.is_admin === false) return;
+        }
+
         if (!window.confirm("Voulez vous vraimment supprimer ce post ?")) return;
 
         instanceAxios.delete(`/api/post/${postId}`)
@@ -95,6 +99,12 @@ const PostContent  = (props) => {
 
     const submitText = (e, post) => {
         e.preventDefault()
+
+        
+        if(CurrentUser.id !== post.user_id) {
+            if(CurrentUser.is_admin === false) return;
+        }
+
 
         instanceAxios({
             method: "PUT",
@@ -196,7 +206,6 @@ const PostContent  = (props) => {
                             </form>
                         }
                     
-                        {/* <ModifyPostInput setPostData={props.setPostData} post={props.post}/> */}
                 </div>
 
                 <div className='btn-container'>

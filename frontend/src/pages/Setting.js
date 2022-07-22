@@ -73,6 +73,10 @@ const Setting  = () => {
     const handlePassword = (e) => {
         e.preventDefault();
 
+        if(CurrentUser.id !== UserData.id) {
+            if(CurrentUser.is_admin === false) return;
+        }
+
         if(newPassword === "" || verifPassword === "") {
             pwdError.current.textContent = 'Veuillez entrer un mot de passe';
             return
@@ -108,6 +112,10 @@ const Setting  = () => {
 
 
     const handleUser = (e) => {
+
+        if(CurrentUser.id !== UserData.id) {
+            if(CurrentUser.is_admin === false) return;
+        }
 
         e.preventDefault();
 
@@ -160,6 +168,11 @@ const Setting  = () => {
     }
 
     const deleteAccount = (userId) => {
+
+        if(CurrentUser.id !== userId) {
+            if(CurrentUser.is_admin === false) return;
+        }
+
         instanceAxios.delete(`/api/user/${userId}`)
         .then(() => {
             instanceAxios.get('/api/auth/signout')

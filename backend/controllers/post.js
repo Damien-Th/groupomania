@@ -50,6 +50,7 @@ exports.getOnePost = (req, res, next) => {
 exports.modifyPostText = (req, res, next) => {
     Post.findOne({where: {id: req.params.id}})
     .then(post => {
+      if(post.user_id !== req.auth.userId) if(req.auth.isAdmin === false) return
        post.content = req.body.content;
        post.save()
        .then(() => res.status(201).json({message: 'Texte du Poste modifié !'}))
@@ -61,6 +62,7 @@ exports.modifyPostText = (req, res, next) => {
 exports.modifyPostImage = (req, res, next) => {
   Post.findOne({where: {id: req.params.id}})
   .then(post => {
+    if(post.user_id !== req.auth.userId) if(req.auth.isAdmin === false) return
     let imageName;
     req.file === undefined ? imageName = req.body.image : imageName = req.file.filename;
     post.image = imageName;
@@ -77,6 +79,7 @@ exports.modifyPostImage = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     Post.findOne({where: {id: req.params.id}})
     .then(post => {
+      if(post.user_id !== req.auth.userId) if(req.auth.isAdmin === false) return
       if(post.image) {
         const imagePath = `images/user_${post.user_id}/post/${post.image}`
         if(fs.existsSync(imagePath)) {

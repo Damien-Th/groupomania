@@ -52,7 +52,6 @@ const Postinput  = (props) => {
      
         axios.post('/api/post', formData)
         .then((res) =>  {
-            // e.target.reset()
             setContent('');
             setPreview(null)
             setImage('')

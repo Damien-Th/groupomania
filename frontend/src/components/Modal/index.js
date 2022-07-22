@@ -1,9 +1,10 @@
-import React, {useRef, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import { instanceAxios } from '../../api/Axios';
-
-
+import { UserContext,  } from '../../context';
 
 const Modal = (props) => {
+
+    const { CurrentUser } = useContext(UserContext)
 
     const user = props.user
     const setModalActive = props.setModalActive
@@ -18,6 +19,10 @@ const Modal = (props) => {
     const handleUser = (e) => {
 
         e.preventDefault();
+
+        if(CurrentUser.id !== user.id) {
+            if(CurrentUser.is_admin === false) return;
+        }
 
         instanceAxios({
             method: "PUT",

@@ -32,6 +32,7 @@ exports.modifyUser = (req, res, next) => {
 
     User.findOne({where: {id: req.params.id}})
     .then(user => {
+    if(user.id !== req.auth.userId) if(req.auth.isAdmin === false) return
 
        if(req.body.password) {
         bcrypt.hash(req.body.password, 10)
@@ -60,7 +61,7 @@ exports.modifyUserAvatar = (req, res, next) => {
 
     User.findOne({where: {id: req.params.id}})
     .then(user => {
-        console.log(user)
+        if(user.id !== req.auth.userId) if(req.auth.isAdmin === false) return
         if(user.image) {
             const imagePath = `images/user_${user.id}/avatar/${user.image}`
             if(fs.existsSync(imagePath)) {
@@ -80,6 +81,8 @@ exports.modifyUserAvatar = (req, res, next) => {
 exports.makeAdmin = (req, res, next) => {
     User.findOne({where: {id: req.params.id}})
     .then(user => {
+    if(req.auth.isAdmin === false) return
+
        user.is_admin = req.body.is_admin;
        user.save()
        .then(() => res.status(201).json({message: 'Utilisateur modifié !'}))
@@ -91,6 +94,7 @@ exports.makeAdmin = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
     User.findOne({where: {id: req.params.id}})
     .then(user => {
+    if(user.id !== req.auth.userId) if(req.auth.isAdmin === false) return
     const dir = `images/user_${req.params.id}`
     if (fs.existsSync(dir)) fs.rmdir(dir, { recursive: true, force: true });
 
