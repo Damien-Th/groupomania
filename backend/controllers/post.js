@@ -65,6 +65,14 @@ exports.modifyPostImage = (req, res, next) => {
     if(post.user_id !== req.auth.userId) if(req.auth.isAdmin === false) return
     let imageName;
     req.file === undefined ? imageName = req.body.image : imageName = req.file.filename;
+    if(!imageName || post.image !== imageName) {
+      const imagePath = `images/user_${post.user_id}/post/${post.image}`
+      if(fs.existsSync(imagePath)) {
+        fs.unlink(imagePath, (err) => {
+          if (err) {console.error(err)}
+        })
+      } 
+    }
     post.image = imageName;
      post.save()
      .then(() => res.status(201).json({

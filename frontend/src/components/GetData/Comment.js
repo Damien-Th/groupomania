@@ -2,7 +2,6 @@ import React, {useContext, useState} from 'react';
 import Like from '../../components/Button/Like';
 import { UserContext} from '../../context';
 import { instanceAxios } from '../../api/Axios';
-import { FaRegTired } from 'react-icons/fa';
 import { formatDistance, subDays, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 

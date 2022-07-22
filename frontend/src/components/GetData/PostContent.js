@@ -8,6 +8,7 @@ import { fr } from 'date-fns/locale';
 import { UserContext} from '../../context';
 import Comment from '../../components/GetData/Comment';
 import { FaRegCommentDots } from 'react-icons/fa';
+import ModifyComment from '../Modal/ModifyComment';
 
 
 const PostContent  = (props) => {
@@ -20,11 +21,8 @@ const PostContent  = (props) => {
 
     const [displayModal, setDisplayModal] = useState(false);
     const [text, setText] = useState(PostUser.content);
-    const [newText, setNewText] = useState(text);
-    const [editText, setEditText] = useState(false);
-    const [editImage, setEditImage] = useState(false);
+    const [editComment, setEditComment] = useState(false);
     const [image, setImage] = useState(PostUser.image);
-    const [newImage, setNewImage] = useState(image);
 
     const { CurrentUser } = useContext(UserContext)
 
@@ -37,7 +35,7 @@ const PostContent  = (props) => {
     let avatarUser
     CurrentUser.image === 'default.jpg' ? avatar = URL_SERVER + '/images/avatars/default.png' : avatar = URL_SERVER + `/images/user_${CurrentUser.id}/avatar/${CurrentUser.image}`
     PostUser.User.image === 'default.jpg' ? avatarUser = URL_SERVER + '/images/avatars/default.png' : avatarUser = URL_SERVER + `/images/user_${PostUser.User.id}/avatar/${PostUser.User.image}`
-    const postImage = URL_SERVER + `/images/user_${PostUser.user_id}/post/${image}`
+    let postImage = URL_SERVER + `/images/user_${PostUser.user_id}/post/`
 
     const handleModal = () => setDisplayModal(!displayModal)
 
@@ -45,7 +43,7 @@ const PostContent  = (props) => {
 
     const [content, setContent] = useState('');
 
-    const handlePostInput = (e) => {
+    const handleCommentInput = (e) => {
         e.preventDefault();
 
         const data = {
@@ -94,33 +92,6 @@ const PostContent  = (props) => {
         });
     }
 
-    const editPost = (e) => {
-        setNewText(e.target.value)
-    }
-
-    const submitText = (e, post) => {
-        e.preventDefault()
-
-        
-        if(CurrentUser.id !== parseInt(post.user_id)) {
-            if(CurrentUser.is_admin === false) return;
-        }
-
-
-        instanceAxios({
-            method: "PUT",
-            url: `/api/post/text/${post.id}`,
-            data: {
-                content: newText
-            },
-        })
-        .then(() => {  
-            setText(newText);
-            setEditText(false);
-        })
-
-    }
-
     const formatDate = (postDate) => {
 
         const date = new Date(postDate)
@@ -143,27 +114,9 @@ const PostContent  = (props) => {
         return formatDistance(subDays(value, 0), new Date(), { locale: fr }).replace('environ', '')
     }
 
-    const submitImage = (e) => {
-        e.preventDefault();
-
-        const formData = new FormData()
-        formData.append("user_id", PostUser.user_id)
-        formData.append("type", 'post')
-        formData.append("image", newImage)
-
-        axios.put(`/api/post/image/${PostUser.id}`, formData)
-        .then((res) =>  {
-            e.target.reset()
-            setImage(res.data.PostUser.image)
-        })
-        .catch((err) => console.log(err));
-    };
-
-
     const handleEdit = () => {
         setDisplayModal(false)
-        setEditText(true)
-        setEditImage(true)
+        setEditComment(true)
     }
 
     return ( 
@@ -179,7 +132,7 @@ const PostContent  = (props) => {
                         {PostUser.User.first_name} {PostUser.User.last_name}
                         <p className='info-time' >{formatDate(PostUser.createdAt)}</p>
                     </div>
-                    {(CurrentUser.is_admin === true || PostUser.User.id === CurrentUser.id) &&<div className='icon-modal' ref={icon} onClick={handleModal}><BiDotsVerticalRounded/>
+                    {(CurrentUser.is_admin === true || PostUser.User.id === CurrentUser.id) && !editComment &&<div className='icon-modal' ref={icon} onClick={handleModal}><BiDotsVerticalRounded/>
                         {displayModal && <div className='modal-wrapper' ref={modal}>
                             <ul>
                                 <li onClick={handleEdit}>Modifier</li>
@@ -189,26 +142,17 @@ const PostContent  = (props) => {
                     </div>}
                 </div>
 
-                <div className='post-content'>
-                    {!editText && <p className='text' >{text}</p>}
-                    {editText && <form onSubmit={(e) => submitText(e, PostUser)}>
-                        <input onChange={(e) => editPost(e, PostUser.id)} defaultValue={newText}></input>
-                        </form>}
-            
-                        {image && <div className='image-post'>
-                            <img alt="pics" src={postImage}/>
-                            {editImage && <button>Change</button>}
-                        </div>}
+                {!editComment && <div className='post-content'>
+                    <p className='text' >{text}</p>
+                    {image && <div className='image-post'>
+                        <img alt="pics" src={`${postImage}${image}`}/>
+                    </div>}
+                </div>}
 
-                        {!PostUser.image && editImage && 
-                            <form className='CommentPost' onSubmit={submitImage}>
-                                <input accept="image/png, image/gif, image/jpeg, image/jpg" className='' type="file" name="avatar" onChange={(e) => setNewImage(e.target.files[0])}/>
-                                <input type="submit" value="Envoyer le formulaire"/>
-                            </form>
-                        }
-                    
-                </div>
-
+                {editComment && <div className='post-content'>
+                    {editComment && <ModifyComment postImage={postImage} setText={setText} setImage={setImage} PostUser={PostUser} text={text} image={image} setEditComment={setEditComment}/>}
+                </div>}
+                
                 <div className='btn-container'>
                     <Like Content={PostUser} Type='post'/>
                     <div>
@@ -226,7 +170,7 @@ const PostContent  = (props) => {
                     <div className='avatar-wrapper avatar_medium'>
                         <img alt="avatar" src={avatar}></img>
                     </div>
-                    <form className='CommentForm' onSubmit={handlePostInput}>
+                    <form className='CommentForm' onSubmit={handleCommentInput}>
                         <input className='input_text' placeholder="Ajoute un commentaire" type="text" id="name" name="user_name" value={content} onChange={(e) => setContent(e.target.value)}/>
                     </form>       
                 </div>

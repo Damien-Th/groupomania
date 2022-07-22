@@ -4,7 +4,7 @@ const handleImageUpload = async (event, setImage, size) => {
 
     const imageFile = event.target.files[0];
 
-    if(event.target.files[0].type === "image/gif") return setImage(event.target.files[0])
+    if(imageFile.type === "image/gif") return setImage(imageFile)
 
     const options = {
       maxSizeMB: 1,

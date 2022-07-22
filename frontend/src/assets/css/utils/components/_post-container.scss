@@ -53,6 +53,15 @@
 
         .post-content {
             padding-top: 20px;
+            width: 86%;
+            margin-left: auto;
+
+      
+            .editText {
+                background-color: var(--fifth);
+                width: 100%;
+                padding: 8px 5px;
+            }
 
 
             .text {
@@ -72,15 +81,13 @@
         }
     
         .btn-container {
-            width: 100%;
+            width: 86%;
+            margin-left: auto;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin: auto;
-            padding-right: 40px;
             margin-top: 20px;
             margin-bottom: 10px;
-            padding-left: 10px;
 
         }
     

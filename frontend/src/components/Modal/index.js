@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import { instanceAxios } from '../../api/Axios';
-import { UserContext,  } from '../../context';
+import { UserContext } from '../../context';
 
 const Modal = (props) => {
 
