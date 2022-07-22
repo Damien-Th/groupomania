@@ -22,7 +22,8 @@ Veuillez installer les Prérequis si ce n'est pas déja le cas
 
 Avant de commencer vous devez  créer la base de donnée -> groupomania
 Il est possible d'utilisé un autre nom mais il faudra au préalable changé la variable 'DB_NAME'
-dans le .env qui se situe au niveau du dossier backend.  Ensuite vous pourrez importer la base de donnée qui vous a été transmis.
+dans le .env qui se situe au niveau du dossier backend.  
+Ensuite vous pourrez importer la base de donnée qui vous a été transmis.
 Veuillez également modifer DB_USER et DB_PASSWORD si vous n'avez pas la même configuration pour la connexion de Mysql
 
 ## Backend
