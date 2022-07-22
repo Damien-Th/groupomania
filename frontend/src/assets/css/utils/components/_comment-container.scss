@@ -11,25 +11,61 @@
         padding-bottom: 0;
 
         .comment-wrapper {
-            @include flex(row, nowrap, initial, center);
+            @include flex(row, nowrap, initial, flex-start);
             gap: 18px;
 
-            p {
-                width: calc(100% - 65px);
+            .underline {
+                width: 100%;
                 border-bottom: solid 3px color(secondary);
             }
+
+            .form-change-profil {
+                width: 100%;
+                background-color: white;
+                padding: 5px;
+            }
+
+            .comment-content {
+                width: 85%;
+            }
+
+        }
+
+        .info-time {
+            font-size: 14px;
         }
 
         .like-wrapper {
             width: calc(100% - 135px);
-            margin: 0 auto;
             margin-top: 5px;
+        }
+
+        .btn-wrapper {
+            display: flex;
+            gap: 18px;
+            margin-top: 18px;
+            margin-left: 68px;
         }
     }
 
     .handle-wrapper {
         display: flex;
         gap: 18px;
+
+        p {
+            cursor: pointer;
+            font-size: 14px;
+
+            &:hover {
+                color: black;
+            }
+        }
+
+        .remove-btn {
+            &:hover {
+                color: color(primary);
+            }
+        }
     }
 
 }

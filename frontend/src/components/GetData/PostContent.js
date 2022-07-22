@@ -71,7 +71,8 @@ const PostContent  = (props) => {
 
         const postId = post.id
 
-        if(CurrentUser.id !== post.user_id) {
+        if(CurrentUser.id !== parseInt(post.user_id)) {
+            console.log(CurrentUser.id, post.user_id)
             if(CurrentUser.is_admin === false) return;
         }
 
@@ -101,7 +102,7 @@ const PostContent  = (props) => {
         e.preventDefault()
 
         
-        if(CurrentUser.id !== post.user_id) {
+        if(CurrentUser.id !== parseInt(post.user_id)) {
             if(CurrentUser.is_admin === false) return;
         }
 
@@ -178,14 +179,14 @@ const PostContent  = (props) => {
                         {PostUser.User.first_name} {PostUser.User.last_name}
                         <p className='info-time' >{formatDate(PostUser.createdAt)}</p>
                     </div>
-                    <div className='icon-modal' ref={icon} onClick={handleModal}><BiDotsVerticalRounded/>
+                    {(CurrentUser.is_admin === true || PostUser.User.id === CurrentUser.id) &&<div className='icon-modal' ref={icon} onClick={handleModal}><BiDotsVerticalRounded/>
                         {displayModal && <div className='modal-wrapper' ref={modal}>
                             <ul>
                                 <li onClick={handleEdit}>Modifier</li>
                                 <li onClick={() => removePost(PostUser)}>Supprimer</li>
                             </ul>
                         </div>}
-                    </div>
+                    </div>}
                 </div>
 
                 <div className='post-content'>

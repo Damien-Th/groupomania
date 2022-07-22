@@ -3,6 +3,8 @@ import Like from '../../components/Button/Like';
 import { UserContext} from '../../context';
 import { instanceAxios } from '../../api/Axios';
 import { FaRegTired } from 'react-icons/fa';
+import { formatDistance, subDays, format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 const Comment = (props) => {
 
@@ -23,6 +25,27 @@ const Comment = (props) => {
     const { CurrentUser } = useContext(UserContext)
 
 
+    const formatDate = (postDate) => {
+
+        const date = new Date(postDate)
+        let lesOneDay = isLessThan24HourAgo(date)
+
+        if(lesOneDay) return dateDiff(date)
+        return format(date, 'dd LLL yyy', { locale: fr })
+    }
+
+
+    function isLessThan24HourAgo(date) {
+
+        const twentyFourHrInMs = 24 * 60 * 60 * 1000;
+        const twentyFourHoursAgo = Date.now() - twentyFourHrInMs;
+
+        return date > twentyFourHoursAgo;
+    }
+
+    const dateDiff = (value) => {
+        return formatDistance(subDays(value, 0), new Date(), { locale: fr }).replace('environ', '')
+    }
 
     const handleComment = (e) => {
         e.preventDefault();
@@ -69,16 +92,22 @@ const Comment = (props) => {
                 <div className='avatar-wrapper avatar_medium'>
                     <img alt="avatar" src={avatar}></img>
                 </div>
-                {!isEdit && <p>{content}</p>}
-                {isEdit && <form onSubmit={handleComment} action="" method="POST" className="form-change-profil">
+                <div className='comment-content'>
+                  
+                    <p>{comments.User.first_name} {comments.User.last_name}</p>
+                    <p className='info-time'>{formatDate(comments.createdAt)}</p>
+                   
+                    {!isEdit && <p className='underline'>{content}</p>}
+                    {isEdit && <form onSubmit={handleComment} action="" method="POST" className="form-change-profil">
                         <div className="comment-wrapper">
                             <label htmlFor="comment"></label>
                             <input onChange={(e) => setContent(e.target.value)} type="text" value={content} name="comment" id="comment" required/>
                         </div>
                     </form>}
                 </div>
-            <div>
-                {CurrentUser.id === comments.User.id && <div className='handle-wrapper'>
+            </div>
+            <div className='btn-wrapper'>
+                {(CurrentUser.is_admin === true || CurrentUser.id === comments.User.id) && <div className='handle-wrapper'>
                     <p onClick={() => setIsEdit(true)} className='edit-btn'>Modifer</p>
                     <p className='remove-btn' onClick={() => removeComment(comments.id)}>Supprimer</p>
                 </div>}
