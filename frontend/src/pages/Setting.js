@@ -14,7 +14,7 @@ const Setting  = () => {
     const [isValid, setIsValid] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [verifPassword, setVerifPassword] = useState('');
-    const [picture, setPicture] = useState('');
+    const [preview, setPreview] =useState('');
     const [newPicture, setNewPicture] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -34,8 +34,41 @@ const Setting  = () => {
     const URL_SERVER = process.env.REACT_APP_URL_SERVER;
     const avatar = URL_SERVER + `/images/avatars/default.png`
 
+    const slugIsValid = (AllUserSlug, slug) => AllUserSlug.filter((UserSlug) => UserSlug.slug === slug)
 
-    //-----//
+
+   //Secure setting only The
+    useEffect(() => {
+   
+        instanceAxios.get('/api/user/slug')
+        .then(res => {
+
+            const result = slugIsValid(res.data, slug)
+
+            if(result.length === 0) {
+                navigate('/')
+                return
+            } 
+
+            setIsValid(true) 
+
+            instanceAxios.get(`/api/user/${result[0].id}`)
+            .then(res => {
+            
+                if(CurrentUser.slug !== res.data.slug) {
+                    navigate('/')
+                    return
+                } 
+                setUserData(res.data)
+                setLastName(res.data.last_name)
+                setFirstName(res.data.first_name)
+                setBiography(res.data.biography)
+            })
+
+        })
+          
+    }, [slug]);
+
 
     const handlePassword = (e) => {
         e.preventDefault();
@@ -47,6 +80,8 @@ const Setting  = () => {
 
         const resultPwd = ErrorPwd(newPassword)
         pwdError.current.textContent = resultPwd[0];
+
+        if(!resultPwd[1]) return
 
         if(newPassword !== verifPassword) {
             pwdError.current.textContent = 'Les mots de passe doivent être identiques';
@@ -60,6 +95,8 @@ const Setting  = () => {
                 password: newPassword,
             },
         }).then(res =>  { 
+            setNewPassword('')
+            setVerifPassword('')
             pwdSuccess.current.textContent = 'Les modifications ont été effectuées !';
             setTimeout(() => {
                 pwdSuccess.current.textContent = '';
@@ -69,42 +106,6 @@ const Setting  = () => {
         .catch((err) => console.log(err));
     }
 
-    ////----///
-
-    const slugIsValid = (AllUserSlug, slug) => AllUserSlug.filter((UserSlug) => UserSlug.slug === slug)
-   
-    useEffect(() => {
-   
-    
-        instanceAxios.get('/api/user/slug')
-        .then(res => {
-
-            const result = slugIsValid(res.data, slug)
-
-            if(result.length === 0 && CurrentUser.is_admin === false) {
-                navigate('/')
-                return
-            } 
-
-            setIsValid(true) 
-
-            instanceAxios.get(`/api/user/${result[0].id}`)
-            .then(res => {
-            
-                if(CurrentUser.slug !== res.data.slug && CurrentUser.is_admin === false) {
-                    navigate('/')
-                    return
-                } 
-                setUserData(res.data)
-                setLastName(res.data.last_name)
-                setFirstName(res.data.first_name)
-                setBiography(res.data.biography)
-                setPicture(picture)
-            })
-
-        })
-          
-    }, [slug]);
 
     const handleUser = (e) => {
 
@@ -122,6 +123,8 @@ const Setting  = () => {
             instanceAxios.get(`/api/user/${UserData.id}`)
             .then(res => {
                 setCurrentUser(res.data)
+                setUserData(res.data)
+                setPreview('')
                 modifSuccess.current.textContent = 'Les modifications ont été effectuées !';
                 setTimeout(() => {
                     modifSuccess.current.textContent = '';
@@ -139,15 +142,50 @@ const Setting  = () => {
     
             axios.put(`/api/user/avatar/${UserData.id}`, formData)
             .then((res) =>  {
-                setNewPicture('')
-                modifSuccess.current.textContent = 'Les modifications ont été effectuées !';
-                setTimeout(() => {
-                    modifSuccess.current.textContent = '';
-                  }, "3500")
+                instanceAxios.get(`/api/user/${UserData.id}`)
+                .then(res => {
+                    setCurrentUser(res.data)
+                    setUserData(res.data)
+                    setPreview('')
+                    modifSuccess.current.textContent = 'Les modifications ont été effectuées !';
+                    setTimeout(() => {
+                        modifSuccess.current.textContent = '';
+                      }, "3500")
+                    
+                });
             })
             .catch((err) => console.log(err));
         }
 
+    }
+
+    const deleteAccount = (userId) => {
+        instanceAxios.delete(`/api/user/${userId}`)
+        .then(() => {
+            instanceAxios.get('/api/auth/signout')
+            .then(res => {
+                setHasValidToken(false)
+            })
+            .catch((err) => console.log(err));
+        });
+    }
+
+        useEffect(() => {
+
+        if(newPicture) {
+            const reader = new FileReader();
+            reader.onloadend = () => setPreview(reader.result)
+            reader.readAsDataURL(newPicture);
+            return
+        }
+        setPreview(null);
+
+    }, [newPicture])
+
+    const clearImage = (e) => {
+        e.preventDefault();
+        setPreview(null); 
+        setNewPicture('')
     }
 
 
@@ -163,18 +201,6 @@ const Setting  = () => {
         });
     }
 
-    const deleteAccount = (userId) => {
-        instanceAxios.delete(`/api/user/${userId}`)
-        .then(() => {
-            instanceAxios.get('/api/auth/signout')
-            .then(res => {
-                setHasValidToken(false)
-            })
-            .catch((err) => console.log(err));
-        });
-    }
-
-
     return (<div className='setting'>
 
         <NavBar/>
@@ -185,7 +211,6 @@ const Setting  = () => {
 
             {isValid && <div className='setting-content'>
                
-
                 <div className="accordion-container boxShadow boderRaduis">
                     <button onClick={handleAccordion} className="accordion active">Profil</button>
                     <div className="panel">
@@ -193,9 +218,13 @@ const Setting  = () => {
                         <form onSubmit={handleUser} action="" method="POST" className="form-change-profil">
                             <div className="image-form-wrapper">
                                 <div className='avatar-wrapper avatar_medium'>
-                                    <img alt="avatar" src={avatar}></img>
+                                    {!preview && UserData.image === 'default.jpg' && <img alt="avatar" src={avatar}></img>}
+                                    {!preview && UserData.image !== 'default.jpg' && <img alt="avatar" src={`${URL_SERVER}/images/user_${UserData.id}/avatar/${UserData.image}`}></img>}
+                                    {preview && <img alt="preview" src={preview}/>}
                                 </div>
-                                <input onChange={(e) => setNewPicture(e.target.files[0])}  accept="image/png, image/gif, image/jpeg, image/jpg" type="file" />
+                                {!preview && <input onChange={(e) => setNewPicture(e.target.files[0])}  accept="image/png, image/gif, image/jpeg, image/jpg" type="file" />}
+                                {!preview && <p className="upload">Upload</p>}
+                                {preview && <button className="clearImage-btn" onClick={clearImage}>Retirer l'image</button>}
                             </div>
                             <div className="profil-wrapper">
                                 <div className="firstname-wrapper border">

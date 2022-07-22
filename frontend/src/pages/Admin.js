@@ -1,16 +1,17 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { instanceAxios } from '../api/Axios';
 import {ImBin} from 'react-icons/im';
 import {AiFillEdit, AiOutlineSearch} from 'react-icons/ai';
-import jwt_decode from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
+import Modal from '../components/Modal';
 import { UserContext,  } from '../context';
-import { Link } from 'react-router-dom';
 
 const Admin = () => {
 
     const [UserData, setUserData] = useState([]);
+    const [ModalActive, setModalActive] = useState(false);
+    const [user, setUser] = useState({});
     const [inputSearch, setInputSearch] = useState("");
     const navigate = useNavigate();
 
@@ -56,6 +57,12 @@ const Admin = () => {
 
     }
 
+    const editUSer = (user) => {
+        setModalActive(true)
+        setUser(user)
+        return user
+    }
+
     return (
 
         <div className='admin'>
@@ -64,7 +71,9 @@ const Admin = () => {
 
             <main className='container'>
 
-                <div className='admin-container'>
+                {ModalActive && <Modal setUserData={setUserData} setModalActive={setModalActive} setUser={setUser} user={user}/>}
+
+                {!ModalActive && <div className='admin-container'>
                     <span className='admin-container__title'>Liste des Utilisateurs</span>
                     <div className="search">
                         <AiOutlineSearch/>
@@ -85,10 +94,11 @@ const Admin = () => {
                                 User => <tr key={'UserData_' + User.id}>
                                 <td className='avatar' key={'UserImg_' + User.id}>
                                     <div className='avatar-wrapper avatar_small'>
-                                        <img alt="avatar" src={avatar}></img>
+                                        {User.image === 'default.jpg' && <img alt="avatar" src={avatar}></img>}
+                                        {User.image !== 'default.jpg' && <img alt="avatar" src={`${URL_SERVER}/images/user_${User.id}/avatar/${User.image}`}></img>}
                                     </div>
                                 </td>
-                                <td className='mobile' key={'UserFullName_' + User.id}>{User.last_name} {User.first_name}</td>
+                                <td className='mobile' key={'UserFullName_' + User.id}>{User.first_name} {User.last_name}</td>
                                 <td key={'UserEmails_' + User.id}>{User.email}</td>
                                 <td key={'UserIsAdmins_' + User.id}>
                                     <div className={`switch-btn ${'is_' + User.is_admin}`}>
@@ -97,16 +107,16 @@ const Admin = () => {
                                     </div>
                                 </td> 
                                 <td>
-                                <Link className='icon-editor' to={`/setting/${User.slug}`}>
+                                <div onClick={() => editUSer(User)} className='icon-editor'>
                                     <AiFillEdit/>
-                                </Link>
+                                </div>
                                 <div className='icon-remove' onClick={() => deleteUSer(User.id)}><ImBin/></div>
                                 </td> 
                             </tr>
                             )}
                         </tbody>
                     </table >
-                </div >
+                </div >}
             </main>
         </div>
         

@@ -10,6 +10,13 @@
 
     &.is_true {
         background-color: #4ed164;
+
+        input[type="checkbox"]{
+            &::before {
+                left: 23px;
+                opacity: 1;
+            }
+        }
     }
 
     input[type="checkbox"]{
@@ -34,11 +41,6 @@
             transition: all .3s ease-in;
         }
        
-
-        &:checked::before {
-            left: 23px;
-            opacity: 1;
-        }
     }
 
 }

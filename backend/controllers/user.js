@@ -60,6 +60,15 @@ exports.modifyUserAvatar = (req, res, next) => {
 
     User.findOne({where: {id: req.params.id}})
     .then(user => {
+        console.log(user)
+        if(user.image) {
+            const imagePath = `images/user_${user.id}/avatar/${user.image}`
+            if(fs.existsSync(imagePath)) {
+              fs.unlink(imagePath, (err) => {
+                if (err) {console.error(err)}
+              })
+            } 
+          }
         user.image = req.file.filename;
         user.save().then(() => res.status(201).json({message: 'Avatar modifié !'}))
         .catch(error => res.status(400).json({ error }));       

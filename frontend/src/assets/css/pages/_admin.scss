@@ -10,109 +10,160 @@
     min-height: 100vh;
 
     .container {
-      
+
         .admin-container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+
+            @media only screen and (max-width: 1224px) {
+                max-width: 750px;
+                padding: 0 30px;
+            }
+
+            @media only screen and (max-width: 799px) {
+                width: 100%;
+            }
+
+            &__title {
+                margin: 30px 0;
+                text-align: center;
+                font-size: rem(22);
+                display: block
+            }
+
+            .search {
+                @include flex(row, nowrap, center, center);
+                height: 38px;
+                width: 100%;
+                border: solid 1px color(third);
+                border-radius: 5px;
+                padding: 6px 8px;
+                margin-bottom: 20px;
+
+                svg {
+                    transform: scale(1.4);
+                    margin-right: 15px;
+                }
+
+                input {
+                    height: 100%;
+                    width: 100%;
+                    border: none;
+                    background-color: transparent;
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+            }
+
+            .myTable {
+
+                border-collapse: separate;
+                border-spacing: 0px 10px;
+
+                th {
+                    text-align: left;
+
+                    &.action {
+                        text-align: center;
+                        width: 65px;
+                    }
+                }
+
+                .mobile {
+                    @media only screen and (max-width: 599px) {
+                        display: none;
+                    }
+                }
+
+                input {
+                    border: none;
+                    font-family: $main_font;
+                    font-size: 16px;
+                    color: color(third);
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                .icon-remove,
+                .icon-editor {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 30px;
+                    width: 30px;
+
+                    svg {
+                        color: white;
+                        cursor: pointer;
+                    }
+                }
+
+                .icon-remove {
+                    background-color: color(primary);
+                }
+
+                .icon-editor {
+                    background-color: color(third);
+                    margin-right: 5px;
+                }
+            }
+        }
+    }
+
+    .form-change-modal {
         width: 100%;
         max-width: 900px;
         margin: auto;
+        padding: 30px;
 
-        @media only screen and (max-width: 1224px) {
-            max-width: 750px;
-            padding: 0 30px;
-        }
+        .modal-wrapper {
 
-        @media only screen and (max-width: 799px) {
-            width: 100%;
-        }
+            .firstname-wrapper, .lastname-wrapper {
+                background-color: color(white);
 
-        &__title {
-            margin: 30px 0;
-            text-align: center;
-            font-size: rem(22);
-            display: block
-        }
-    
-        .search {
-            @include flex(row, nowrap, center, center);
-            height: 38px;
-            width: 100%;
-            border: solid 1px color(third);
-            border-radius: 5px;
-            padding: 6px 8px;
-            margin-bottom: 20px;
-        
-            svg {
-                transform: scale(1.4);
-                margin-right: 15px;
-            }
-        
-            input {
-                height: 100%;
-                width: 100%;
-                border: none;
-                background-color: transparent;
-                &:focus {
-                    outline: none;
-                }
-            }
-        }
-        
-        .myTable {
-
-            border-collapse: separate;
-            border-spacing: 0px 10px;
-    
-            th {
-                text-align: left;
-
-                &.action {
-                    text-align: center;
-                    width: 65px;
+                input {
+                    width: 100%;
                 }
             }
 
-            .mobile {
-                @media only screen and (max-width: 599px) {
-                    display: none;
-                }
+            .border {
+                border: solid 2px var(--third);
+                margin-bottom: 10px;
+                border-radius: 5px;
+                padding: 5px;
             }
-        
-            input {
-                border: none;
-                font-family: $main_font;
+
+            input.btn-submit {
+                margin: 12px 0;
                 font-size: 16px;
-                color: color(third);
-                
-                &:focus {
-                    outline: none;
-                }
+                font-weight: 600;
             }
-            
-            .icon-remove, .icon-editor {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                height: 30px;
-                width: 30px;
-                svg {
-                    color: white;
-                    cursor: pointer;
-                }
-            }
-        
-            .icon-remove {
+        }
+
+        .btn-wrapper {
+            margin-top: 18px;
+            display: flex;
+            gap: 18px;
+
+            .cancel {
                 background-color: color(primary);
+                padding: 8px 12px;
+                color: white;
+                cursor: pointer;
             }
-        
-            .icon-editor {
+
+            .submit {
                 background-color: color(third);
-                margin-right: 5px;
+                padding: 8px 12px;
+                color: white;
+                cursor: pointer;
             }
         }
     }
-    }
+
 }
-
-
-
-
