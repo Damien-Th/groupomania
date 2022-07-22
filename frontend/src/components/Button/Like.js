@@ -38,7 +38,6 @@ const handleLike = (type, contentId, userId) => {
  
     instanceAxios.post('/api/like', data)
     .then(() => countContentLike(contentId))
-    .catch((err) => console.log(err));
 }
 
 const isPostLiked = (dataLike, contentId) => {

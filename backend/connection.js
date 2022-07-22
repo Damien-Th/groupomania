@@ -13,15 +13,13 @@ const sequelize = new Sequelize(`${DB_NAME}`, `${DB_USER}`, `${DB_PASSWORD}`, {
     dialect: 'mysql',
 });
 
-if(ENV === 'development') {
-  sequelize.sync(err => {
-      console.log('Database Sync Error', err)
-  })
-}
+
+sequelize.sync(err => {})
+
 
 sequelize.authenticate()
-  .then(() => {console.log('Connection has been established successfully.')})
-  .catch(err => {console.error('Unable to connect to the database:', err)});
+  .then(() => {})
+  .catch(err => {});
 
 module.exports = sequelize
 global.sequelize = sequelize

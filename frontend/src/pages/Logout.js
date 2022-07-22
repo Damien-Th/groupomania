@@ -18,7 +18,6 @@ const Logout  = () => {
             setHasValidToken(false)
             navigate('/login')
         })
-        .catch((err) => console.log(err));
 
     }, []);
 

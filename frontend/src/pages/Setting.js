@@ -107,7 +107,6 @@ const Setting  = () => {
               }, "3500")
 
         })
-        .catch((err) => console.log(err));
     }
 
 
@@ -140,7 +139,6 @@ const Setting  = () => {
                 
             });
         })
-        .catch((err) => console.log(err));
 
         if(newPicture !== '') {
             const formData = new FormData()
@@ -162,7 +160,6 @@ const Setting  = () => {
                     
                 });
             })
-            .catch((err) => console.log(err));
         }
 
     }
@@ -179,7 +176,6 @@ const Setting  = () => {
             .then(res => {
                 setHasValidToken(false)
             })
-            .catch((err) => console.log(err));
         });
     }
 

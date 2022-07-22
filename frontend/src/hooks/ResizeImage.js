@@ -15,9 +15,7 @@ const handleImageUpload = async (event, setImage, size) => {
       const compressedFile = await imageCompression(imageFile, options);
 
       return setImage(compressedFile); 
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   
   }
 

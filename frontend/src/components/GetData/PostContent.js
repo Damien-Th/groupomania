@@ -1,6 +1,6 @@
 import React, {useState, useRef, useContext} from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
-import axios, { instanceAxios } from '../../api/Axios';
+import { instanceAxios } from '../../api/Axios';
 import OnClickOutside from '../../hooks/OnClickOutside';
 import Like from '../../components/Button/Like';
 import { formatDistance, subDays, format } from 'date-fns';
@@ -61,7 +61,6 @@ const PostContent  = (props) => {
             const newObj = {User, ...res.data.comment}
             setUserComments(UserComments => [...UserComments, newObj]) 
         })
-        .catch((err) => console.log(err));
         
     };
 
@@ -70,7 +69,6 @@ const PostContent  = (props) => {
         const postId = post.id
 
         if(CurrentUser.id !== parseInt(post.user_id)) {
-            console.log(CurrentUser.id, post.user_id)
             if(CurrentUser.is_admin === false) return;
         }
 

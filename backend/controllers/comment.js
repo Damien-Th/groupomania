@@ -13,11 +13,7 @@ exports.createComment = (req, res, next) => {
           message: 'Comment enregistré !',
           comment
         }))
-        .catch(error => {
-          res.status(400).json({
-            error
-          })
-        });
+        .catch(error => res.status(400).json({error}));
 };
 
 exports.getAllComments = (req, res, next) => {

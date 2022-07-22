@@ -39,7 +39,6 @@ const Modal = (props) => {
             instanceAxios.get('/api/user')
             .then(response => setUserData(response.data));
         })
-        .catch((err) => console.log(err));
     }
 
     const cancel = (e) => {

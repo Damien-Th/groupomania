@@ -58,7 +58,6 @@ const Postinput  = (props) => {
             const newObj = {User, ...res.data.post}
             setPostData(PostData => [newObj, ...PostData])
         })
-        .catch((err) => console.log(err));
     };
 
     const clearImage = (e) => {

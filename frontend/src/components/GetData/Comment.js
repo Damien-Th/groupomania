@@ -63,7 +63,6 @@ const Comment = (props) => {
             setIsEdit(false)
             setContent(content)
         })
-        .catch((err) => console.log(err));
         
     };
 
@@ -81,7 +80,6 @@ const Comment = (props) => {
             const arr = UserComments.filter((item) => item !== comments);
             setUserComments(arr);
         })
-        .catch((err) => console.log(err));
      
     }
 

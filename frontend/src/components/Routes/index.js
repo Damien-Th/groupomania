@@ -26,7 +26,6 @@ const MyRoutes = () => {
             .then(res => {
                 setCurrentUser(res.data)
                 if(!hasValidToken) setHasValidToken(true);
-                console.log()
             })
         }).catch(() => setHasValidToken(false));
 
