@@ -77,8 +77,10 @@ const Postinput  = (props) => {
                 </div>
 
                 <form onSubmit={handlePostInput}>
+                    <label htmlFor='name'></label>
                     <input className='input_text' placeholder="Ajoute un Poste" type="text" id="name" name="user_name" value={content} onChange={(e) => setContent(e.target.value)}/>
                     <div className='input_file--wrapper'>
+                        <label htmlFor='avatar'></label>
                         <input ref={imageUploader} accept="image/png, image/gif, image/jpeg, image/jpg" className='input_file--wrapper__input' type="file" id="avatar" name="avatar" onChange={(e) => handleImageUpload(e, setImage, 1024)}/>
                         <BsCardImage/>
                     </div>

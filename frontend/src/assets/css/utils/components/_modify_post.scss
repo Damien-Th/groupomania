@@ -1,0 +1,105 @@
+@import "../../common/variables";
+@import "../../common/mixins";
+
+.post-content {
+
+    .image-post {
+
+        .emptyImage {
+            background-color: color(fifth);
+            height: 500px;
+        }
+    }
+
+    .post-image {
+        position: relative;
+        height: 50px;
+
+        .edit_image {
+            z-index: 1;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            background: transparent;
+            border: none;
+            width: 60px;
+            cursor: pointer;
+            font-size: 0;
+        }
+
+        .upload-btn {
+            z-index: 0;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: color(third);
+            color: white;
+            padding: 0px 8px;
+            font-size: 14px;
+            font-weight: 400;
+            border-radius: 5px;
+            cursor: pointer;
+
+        }
+
+        .remove-btn {
+            display: block;
+            cursor: pointer;
+            z-index: 0;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: color(primary);
+            color: white;
+            padding: 0px 8px;
+            font-size: 14px;
+            font-weight: 400;
+            border-radius: 5px;
+
+        }
+    }
+
+    .btn-wrapper {
+        display: flex;
+        gap: 18px;
+        margin-top: 15px;
+
+        input, p {
+            font-size: 16px;
+            padding: 0px 8px;
+            cursor: pointer;
+        }
+
+        input {
+            background-color: color(third);
+            border: solid 2px color(third);
+            color: white;
+        }
+
+        p {
+            background-color: white;
+            color: color(primary);
+            border: solid 2px color(fourth);
+            font-weight: 600;
+        
+            &:hover {
+                background-color: color(fourth);
+                color: white;
+            }
+        }
+    }
+
+    .editPost {
+        padding: 10px 5px;
+        background-color: color(fifth);
+        width: 100%;
+        margin-bottom: 10px;
+        border-radius: 5px;
+
+
+        &:focus {
+            border: solid 1px color(black);
+        }
+    }
+}

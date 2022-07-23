@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { instanceAxios } from '../api/Axios';
 import NavBar from '../components/NavBar';
 import Aside from '../components/Aside';
 import PostContent from '../components/GetData/PostContent';
-import { UserContext,  } from '../context';
 
 const Profil  = () => {
 
@@ -18,11 +17,6 @@ const Profil  = () => {
     const location = useLocation();
     let urlsplit = location.pathname.split("/profil/");
     const slug = urlsplit[1]
-
-
-
-    const { CurrentUser } = useContext(UserContext)
-
 
     const slugIsValid = (AllUserSlug, slug) => AllUserSlug.filter((UserSlug) => UserSlug.slug === slug)
    

@@ -8,7 +8,7 @@ import { fr } from 'date-fns/locale';
 import { UserContext} from '../../context';
 import Comment from '../../components/GetData/Comment';
 import { FaRegCommentDots } from 'react-icons/fa';
-import ModifyComment from '../Modal/ModifyComment';
+import ModifyPost from '../Modal/ModifyPost';
 
 
 const PostContent  = (props) => {
@@ -148,7 +148,7 @@ const PostContent  = (props) => {
                 </div>}
 
                 {editComment && <div className='post-content'>
-                    {editComment && <ModifyComment postImage={postImage} setText={setText} setImage={setImage} PostUser={PostUser} text={text} image={image} setEditComment={setEditComment}/>}
+                    {editComment && <ModifyPost postImage={postImage} setText={setText} setImage={setImage} PostUser={PostUser} text={text} image={image} setEditComment={setEditComment}/>}
                 </div>}
                 
                 <div className='btn-container'>
@@ -169,6 +169,7 @@ const PostContent  = (props) => {
                         <img alt="avatar" src={avatar}></img>
                     </div>
                     <form className='CommentForm' onSubmit={handleCommentInput}>
+                        <label htmlFor="name"></label>
                         <input className='input_text' placeholder="Ajoute un commentaire" type="text" id="name" name="user_name" value={content} onChange={(e) => setContent(e.target.value)}/>
                     </form>       
                 </div>
