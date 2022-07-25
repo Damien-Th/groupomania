@@ -2,8 +2,8 @@
 /node_modules
 
 # Dotenv
-.env.*
-.env
+# .env.*
+# .env
 
 # Images
 /images/user_*

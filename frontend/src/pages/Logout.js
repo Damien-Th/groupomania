@@ -9,8 +9,6 @@ const Logout  = () => {
 
     const navigate = useNavigate();
 
-
-
     useEffect(() => {
 
         instanceAxios.get('/api/auth/signout')
