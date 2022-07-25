@@ -42,8 +42,8 @@ const ModifyPost = (props) => {
             if(CurrentUser.is_admin === false) return;
         }
 
-        if(!newText && !newImage) return
-
+        if(!newText && !newImage) cancel()
+        
         instanceAxios({
             method: "PUT",
             url: `/api/post/text/${PostUser.id}`,
@@ -56,8 +56,8 @@ const ModifyPost = (props) => {
             setEditComment(false)
         })
 
-        if(newImage !== image) {
-            
+        if(newImage !== image && newImage !== '') {
+     
             const formData = new FormData()
             formData.append("user_id", PostUser.user_id)
             formData.append("type", 'post')
@@ -109,7 +109,7 @@ const ModifyPost = (props) => {
         </div>
 
         <div className='btn-wrapper'>
-            <input type="submit" value="Modifer"/>
+            <input type="submit" value="Enregistrer"/>
             <p onClick={cancel}>Annuler</p>
         </div>
     </form>);

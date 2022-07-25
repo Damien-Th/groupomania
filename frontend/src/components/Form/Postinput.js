@@ -21,7 +21,6 @@ const Postinput  = (props) => {
 
     const imageUploader = useRef()
 
-
     useEffect(() => {
 
         if(image) {
@@ -57,6 +56,7 @@ const Postinput  = (props) => {
             setImage('')
             const newObj = {User, ...res.data.post}
             setPostData(PostData => [newObj, ...PostData])
+            imageUploader.current.value = null
         })
     };
 
