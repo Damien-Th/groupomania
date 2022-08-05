@@ -15,7 +15,7 @@ const User = require('./models/User');
 const Comment = require('./models/Comment');
 const Like = require('./models/Like');
 
-func.hasMany(User, Post, 'user_id', 'CASCADE ')
+func.hasMany(User, Post, 'user_id', 'CASCADE')
 func.hasMany(User, Comment, 'user_id', 'CASCADE')
 func.hasMany(Post, Comment, 'post_id', 'CASCADE')
 func.belongsTo(Like, User, 'user_id')

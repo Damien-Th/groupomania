@@ -1,5 +1,6 @@
 const Comment = require('../models/Comment');
 const User = require('../models/User');
+const Like = require('../models/Like');
 
 exports.createComment = (req, res, next) => {
         const comment = new Comment({
@@ -63,7 +64,10 @@ exports.deleteComment = (req, res, next) => {
     if(comment.user_id !== req.auth.userId) if(req.auth.isAdmin === false) return
 
        comment.destroy()
-       .then(() => res.status(201).json({message: 'Comment supprimé !'}))
+       .then((result) => {
+        Like.destroy({ where: { type_id: result.id } })
+        .then(() => res.status(201).json({message: 'Comment supprimé !'}))
+       }) 
        .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));

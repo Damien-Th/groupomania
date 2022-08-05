@@ -96,8 +96,11 @@ exports.deleteUser = (req, res, next) => {
     .then(user => {
     if(user.id !== req.auth.userId) if(req.auth.isAdmin === false) return
     const dir = `images/user_${req.params.id}`
-    if (fs.existsSync(dir)) fs.rmdir(dir, { recursive: true, force: true });
-
+    if(fs.existsSync(dir)) {
+        fs.rmdir(dir, { recursive: true, force: true }, (err) => {
+          if (err) {console.error(err)}
+        })
+      } 
        user.destroy()
        .then(() => {
         Like.destroy({ where: { user_id: null } })
@@ -105,5 +108,5 @@ exports.deleteUser = (req, res, next) => {
        })
        .catch(error => res.status(400).json({ error }));
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ error: 'okkk' }));
 };

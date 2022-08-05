@@ -1,5 +1,6 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
+const Like = require('../models/Like');
 const func  = require('../function');
 fs = require('fs');
 
@@ -97,7 +98,10 @@ exports.deletePost = (req, res, next) => {
         } 
       }
        post.destroy()
-       .then(() => res.status(201).json({message: 'Post supprimé !'}))
+       .then((result) => {
+        Like.destroy({ where: { type_id: result.id } })
+        .then(() => res.status(201).json({message: 'Post supprimé !'}))
+       })
        .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
